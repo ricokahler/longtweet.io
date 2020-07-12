@@ -7,18 +7,6 @@ import Post from '../components/post';
 import head from '../helpers/head';
 import wrapLambda from '../helpers/wrap-lambda';
 import sanitizeHtml from 'sanitize-html';
-import MarkdownIt from 'markdown-it';
-import { JSDOM } from 'jsdom';
-
-function getDescription(text: string) {
-  const md = new MarkdownIt('default', {});
-  const jsdom = new JSDOM();
-  const { document } = jsdom.window;
-  const el = document.createElement('div');
-
-  el.innerHTML = md.render(text);
-  return (el.textContent || '').replace(/"/g, '');
-}
 
 const handler: LambdaHandler = async (event) => {
   const tokenPayload = await validateToken(event);
@@ -58,8 +46,8 @@ const handler: LambdaHandler = async (event) => {
     .promise();
 
   const createdDate = new Date().toISOString();
-  const description = getDescription(text);
-  const title = sanitizeHtml(_title);
+  const description = `${sanitizeHtml(text).replace(/"/g, '').slice(0, 200)}…`;
+  const title = sanitizeHtml(_title).replace(/"/g, '');
 
   const html = `<!DOCTYPE html>
     <html lang="en">
