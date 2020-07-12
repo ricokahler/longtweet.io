@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import usePull from 'use-pull';
 import PaperPlane from './paper-plane';
 import { Redirect } from './router';
@@ -13,6 +13,7 @@ function Compose() {
   const [text, setText] = useState('');
   const [autoResize, setAutoResize] = useState(true);
   const [loading, setLoading] = useState(false);
+  const postedRef = useRef(false);
 
   const getTitle = usePull(title);
   const getText = usePull(text);
@@ -21,6 +22,10 @@ function Compose() {
     const handler = (e: BeforeUnloadEvent) => {
       const title = getTitle();
       const text = getText();
+
+      if (postedRef.current) {
+        return;
+      }
 
       if (title || text) {
         // Cancel the event as stated by the standard.
@@ -118,10 +123,12 @@ function Compose() {
             }
 
             const { id } = await response.json();
-            window.location.href = `/${id}`;
+            postedRef.current = true;
+            window.location.assign(`/${id}`);
           } catch {
             alert("We're sorry. Something went wrong.");
             setLoading(false);
+            postedRef.current = false;
           }
         }}
       >
