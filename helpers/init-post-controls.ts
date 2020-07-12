@@ -72,6 +72,8 @@ function initPostControls() {
         if (!response.ok) {
           throw new Error('not okay error');
         }
+
+        window.location.assign('/404');
       } catch {
         alert(
           'Sorry, something went wrong while trying to delete your post. Please try again.',
