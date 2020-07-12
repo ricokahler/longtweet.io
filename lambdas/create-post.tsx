@@ -8,15 +8,11 @@ import head from '../helpers/head';
 import wrapLambda from '../helpers/wrap-lambda';
 
 const handler: LambdaHandler = async (event) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204 };
-  }
-
   const tokenPayload = await validateToken(event);
   if (!tokenPayload) {
     return { statusCode: 401 };
   }
-  const { user } = tokenPayload;
+  const { user, handle } = tokenPayload;
 
   const s3 = new S3();
 
@@ -53,10 +49,23 @@ const handler: LambdaHandler = async (event) => {
     );
   });
 
+  const createdDate = new Date().toISOString();
+
   const html = `<html>
+    <![CDATA[${JSON.stringify({
+      summary: title || text.substring(0, 100),
+      createdDate,
+    })}]]>
     <head>${head}</head>
     <body>${render(
-      <Post title={title} text={text} user={user.toString()} postId={id} />,
+      <Post
+        title={title}
+        text={text}
+        user={user.toString()}
+        postId={id}
+        createdDate={createdDate}
+        handle={handle}
+      />,
     )}</body>
   </html>`;
 

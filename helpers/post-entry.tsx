@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import Post from '../components/post';
 import '../components/app.css';
-import initAuthorControls from './init-author-controls';
+import './init-author-controls';
 
 const container = document.createElement('div');
 document.body.appendChild(container);
@@ -14,6 +14,8 @@ render(
     title="Once upon a time"
     user="987520772"
     postId="test-post"
+    createdDate={new Date().toISOString()}
+    handle="ricokahler"
     text={`
 # this is a thing
 
@@ -40,4 +42,3 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   container,
 );
 
-initAuthorControls();

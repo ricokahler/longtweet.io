@@ -4,6 +4,7 @@ import PaperPlane from './paper-plane';
 import { Redirect } from './router';
 import { useUser } from './user';
 import { getToken } from '../helpers/auth';
+import CircleNotch from './circle-notch';
 import fetch from '../helpers/wrapped-fetch';
 
 function Compose() {
@@ -11,6 +12,7 @@ function Compose() {
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   const [autoResize, setAutoResize] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const getTitle = usePull(title);
   const getText = usePull(text);
@@ -93,9 +95,11 @@ function Compose() {
       )}
       <button
         className="compose-button"
-        disabled={!text || text.length > 300000}
+        disabled={!text || text.length > 300000 || loading}
         onClick={async () => {
+          setLoading(true);
           if (!window.confirm('Are you sure want to post this?')) {
+            setLoading(false);
             return;
           }
 
@@ -112,13 +116,17 @@ function Compose() {
             if (!response.ok) {
               throw new Error();
             }
+
+            const { id } = await response.json();
+            window.location.href = `/${id}`;
           } catch {
             alert("We're sorry. Something went wrong.");
+            setLoading(false);
           }
         }}
       >
         <span>Post</span>
-        <PaperPlane />
+        {loading ? <CircleNotch /> : <PaperPlane />}
       </button>
     </>
   );

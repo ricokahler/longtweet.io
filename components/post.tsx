@@ -11,10 +11,12 @@ interface Props {
   title: string;
   text: string;
   user: string;
+  handle: string;
   postId: string;
+  createdDate: string;
 }
 
-function Post({ title, text, user, postId }: Props) {
+function Post({ title, text, user, postId, createdDate, handle }: Props) {
   return (
     <Router>
       <UserProvider>
@@ -24,6 +26,7 @@ function Post({ title, text, user, postId }: Props) {
             id="author-controls"
             className="author-controls caption"
             data-user={user.toString()}
+            data-post-id={postId}
             style={{ display: 'none' }}
           >
             <div className="author-controls__description">
@@ -47,6 +50,25 @@ function Post({ title, text, user, postId }: Props) {
             </button>
           </div>
           {title && <h1 className="title">{title}</h1>}
+          <p className="caption">
+            <span>
+              — by{' '}
+              <a
+                href={`https://twitter.com/intent/user?user_id=${encodeURIComponent(
+                  user,
+                )}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                @{handle}
+              </a>
+              ,
+            </span>
+            &nbsp;
+            <span data-created-data={createdDate} id="created-date">
+              {createdDate}
+            </span>
+          </p>
           <article dangerouslySetInnerHTML={{ __html: md.render(text, {}) }} />
         </main>
         <Footer />

@@ -1,6 +1,13 @@
 import { getLoggedIn, getUserInfo } from './auth';
 
 function initAuthorControls() {
+  const createdDate = document.querySelector<HTMLSpanElement>('#created-date');
+  if (createdDate) {
+    createdDate.innerText = new Date(
+      createdDate.innerText.trim(),
+    ).toLocaleString();
+  }
+
   if (!getLoggedIn()) {
     return;
   }
@@ -24,20 +31,51 @@ function initAuthorControls() {
   authorControls.style.display = '';
 
   const deleteButton = document.querySelector<HTMLButtonElement>('#delete');
-  if (!deleteButton) {
-    return;
-  }
+  if (deleteButton) {
+    deleteButton.addEventListener('click', async () => {
+      if (
+        !window.confirm(
+          'Are you sure you want to delete this post?\n' +
+            'NOTE: deletion requests take a bit.',
+        )
+      ) {
+        return;
+      }
 
-  deleteButton.addEventListener('click', () => {
-    if (
-      !window.confirm(
-        'Are you sure you want to delete this post?\n' +
-          'NOTE: deletion requests take a bit.',
-      )
-    ) {
-      return;
-    }
-  });
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('no token');
+        }
+
+        const postId = authorControls.dataset.postId;
+        if (!postId) {
+          throw new Error('no post id');
+        }
+
+        const response = await fetch('https://api.longtweet.io/delete-post', {
+          method: 'POST',
+          headers: {
+            Authorization: token,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: postId,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('not okay error');
+        }
+      } catch {
+        alert(
+          'Sorry, something went wrong while trying to delete your post. Please try again.',
+        );
+      }
+    });
+  }
 }
 
-export default initAuthorControls;
+setTimeout(() => {
+  initAuthorControls();
+}, 0);
