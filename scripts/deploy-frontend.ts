@@ -3,6 +3,7 @@ import webpack from 'webpack';
 import { createFsFromVolume, Volume } from 'memfs';
 import path from 'path';
 import webpackConfig from '../webpack.config';
+import bundleInitPostControls from '../helpers/bundle-init-post-controls';
 
 const extensionMap: { [key: string]: string | undefined } = {
   js: 'text/javascript',
@@ -50,6 +51,9 @@ async function main() {
     }
   }
 
+  // bundle post controls
+  const postControls = await bundleInitPostControls();
+
   console.log('Uploading to S3…');
 
   // upload to S3
@@ -95,6 +99,16 @@ async function main() {
     }),
   );
 
+  await s3
+    .upload({
+      Bucket: 'longtweet.io',
+      Key: 'post.js',
+      ACL: 'public-read',
+      ContentType: 'text/javascript',
+      Body: postControls,
+    })
+    .promise();
+
   console.log('Creating CloudFront invalidation…');
   const cloudFront = new CloudFront();
   const invalidationResult = await new Promise<
@@ -106,8 +120,8 @@ async function main() {
         InvalidationBatch: {
           CallerReference: Date.now().toString(),
           Paths: {
-            Quantity: distDir.length,
-            Items: distDir.map((dir) => `/${dir}`),
+            Quantity: distDir.length + 1,
+            Items: [...distDir.map((dir) => `/${dir}`), '/post.js'],
           },
         },
       },

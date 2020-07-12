@@ -2,12 +2,10 @@ import React from 'react';
 import { render } from 'react-dom';
 import Post from '../components/post';
 import '../components/app.css';
-import './init-author-controls';
+import './init-post-controls';
 
 const container = document.createElement('div');
 document.body.appendChild(container);
-
-console.log('test');
 
 render(
   <Post
@@ -41,4 +39,3 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   />,
   container,
 );
-

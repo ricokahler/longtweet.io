@@ -66,7 +66,9 @@ const handler: LambdaHandler = async (event) => {
         createdDate={createdDate}
         handle={handle}
       />,
-    )}</body>
+    )}
+    <script src="/post.js"></script>
+    </body>
   </html>`;
 
   await new Promise((resolve, reject) => {

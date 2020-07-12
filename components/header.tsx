@@ -19,11 +19,15 @@ function Header() {
       <span className="brand-subtitle caption">
         — simple ad-free, tracker-free posts
       </span>
-      {user.loggedIn && (
-        <a className="button logout-button" title="My Account" href="/account">
-          <Profile />
-        </a>
-      )}
+      <a
+        style={{ display: user.loggedIn ? undefined : 'none' }}
+        className="button logout-button"
+        title="My Account"
+        id="my-account"
+        href="/account"
+      >
+        <Profile />
+      </a>
     </header>
   );
 }

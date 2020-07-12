@@ -1,6 +1,6 @@
 import { getLoggedIn, getUserInfo } from './auth';
 
-function initAuthorControls() {
+function initPostControls() {
   const createdDate = document.querySelector<HTMLSpanElement>('#created-date');
   if (createdDate) {
     createdDate.innerText = new Date(
@@ -10,6 +10,11 @@ function initAuthorControls() {
 
   if (!getLoggedIn()) {
     return;
+  }
+
+  const myAccount = document.querySelector<HTMLAnchorElement>('#my-account');
+  if (myAccount) {
+    myAccount.style.display = 'inline';
   }
 
   const userInfo = getUserInfo();
@@ -56,7 +61,7 @@ function initAuthorControls() {
         const response = await fetch('https://api.longtweet.io/delete-post', {
           method: 'POST',
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -77,5 +82,5 @@ function initAuthorControls() {
 }
 
 setTimeout(() => {
-  initAuthorControls();
+  initPostControls();
 }, 0);
