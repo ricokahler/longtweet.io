@@ -5,6 +5,7 @@ import Home from './home';
 import Compose from './compose';
 import About from './about';
 import Account from './account';
+import NoRoute from './no-route';
 import { UserProvider } from './user';
 import Header from './header';
 import Footer from './footer';
@@ -39,7 +40,7 @@ function App() {
           ) : path === '/account' ? (
             <Account />
           ) : path === '/404' ? (
-            <>404</>
+            <NoRoute />
           ) : (
             <Redirect to="/404" />
           )}
