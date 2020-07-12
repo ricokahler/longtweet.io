@@ -77,7 +77,8 @@ const handler: LambdaHandler = async (event) => {
       <meta property="og:url" content="https://longtweet.io/${id}">
       <meta property="og:description" content="${description}">
       <meta property="og:type" content="website">
-      <meta name="copyright" content="Copyright © 2020 Rico Kahler" />
+      <meta property="og:image" content="https://longtweet.io/black.png">
+      <meta name="copyright" content="Copyright © 2020 ${sanitizeHtml(handle)}" />
       <meta name="author" content="${sanitizeHtml(handle)}" />
       <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
       <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">

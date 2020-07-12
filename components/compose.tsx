@@ -59,7 +59,7 @@ function Compose() {
         <br />
         {user.handle && (
           <>
-            <span className="emoji">👋</span> Writing as{' '}
+            <span className="emoji" role="img" aria-label="wave">👋</span> Writing as{' '}
             <a
               href={`https://twitter.com/${user.handle}`}
               target="_blank"

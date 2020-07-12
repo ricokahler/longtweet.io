@@ -40,6 +40,8 @@ function Post({ title, text, user, postId, createdDate, handle }: Props) {
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
                 `https://longtweet.io/${postId}`,
               )}`}
+              target="_blank"
+              rel="noreferrer noopener"
             >
               Tweet
             </a>
