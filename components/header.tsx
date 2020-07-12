@@ -21,7 +21,7 @@ function Header() {
       </span>
       <a
         style={{ display: user.loggedIn ? undefined : 'none' }}
-        className="button logout-button"
+        className="button header-button"
         title="My Account"
         id="my-account"
         href="/account"

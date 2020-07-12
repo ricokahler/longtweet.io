@@ -4,6 +4,7 @@ import Callback from './callback';
 import Home from './home';
 import Compose from './compose';
 import About from './about';
+import Account from './account';
 import { UserProvider } from './user';
 import Header from './header';
 import Footer from './footer';
@@ -35,6 +36,8 @@ function App() {
             <About key="about" />
           ) : path === '/privacy' ? (
             <Privacy key="privacy" />
+          ) : path === '/account' ? (
+            <Account />
           ) : path === '/404' ? (
             <>404</>
           ) : (
