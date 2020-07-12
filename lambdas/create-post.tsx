@@ -47,7 +47,8 @@ const handler: LambdaHandler = async (event) => {
 
   const createdDate = new Date().toISOString();
   const description = `${sanitizeHtml(text).replace(/"/g, '').slice(0, 200)}…`;
-  const title = sanitizeHtml(_title).replace(/"/g, '');
+  const title =
+    sanitizeHtml(_title).replace(/"/g, '') || `longtweet by @${handle}`;
 
   const html = `<!DOCTYPE html>
     <html lang="en">
@@ -78,7 +79,9 @@ const handler: LambdaHandler = async (event) => {
       <meta property="og:description" content="${description}">
       <meta property="og:type" content="website">
       <meta property="og:image" content="https://longtweet.io/black.png">
-      <meta name="copyright" content="Copyright © 2020 ${sanitizeHtml(handle)}" />
+      <meta name="copyright" content="Copyright © 2020 ${sanitizeHtml(
+        handle,
+      )}" />
       <meta name="author" content="${sanitizeHtml(handle)}" />
       <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
       <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
