@@ -6,6 +6,7 @@ import Compose from './compose';
 import About from './about';
 import Account from './account';
 import NoRoute from './no-route';
+import Terms from './terms';
 import { UserProvider } from './user';
 import Header from './header';
 import Footer from './footer';
@@ -39,6 +40,8 @@ function App() {
             <Privacy key="privacy" />
           ) : path === '/account' ? (
             <Account />
+          ) : path === '/terms' ? (
+            <Terms />
           ) : path === '/404' ? (
             <NoRoute />
           ) : (

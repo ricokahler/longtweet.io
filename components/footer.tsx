@@ -8,10 +8,7 @@ function Footer() {
           <a href="/about">About</a>
         </li>
         <li>
-          <a href="/about#ad-free">Ad free?</a>
-        </li>
-        <li>
-          <a href="/about#tracker-free">Tracker free?</a>
+          <a href="/terms">Terms</a>
         </li>
         <li>
           <a href="/privacy">Privacy</a>
