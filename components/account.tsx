@@ -58,7 +58,9 @@ function Account() {
     <>
       <div className="account-row">
         <h1 className="title">Your posts</h1>
-        <button className="button logout-button">Logout</button>
+        <button className="button logout-button" onClick={logout}>
+          Logout
+        </button>
       </div>
 
       {loading ? (
