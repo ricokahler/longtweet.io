@@ -7,6 +7,18 @@ import Post from '../components/post';
 import head from '../helpers/head';
 import wrapLambda from '../helpers/wrap-lambda';
 import sanitizeHtml from 'sanitize-html';
+import MarkdownIt from 'markdown-it';
+import { JSDOM } from 'jsdom';
+
+function getDescription(text: string) {
+  const md = new MarkdownIt('default', {});
+  const jsdom = new JSDOM();
+  const { document } = jsdom.window;
+  const el = document.createElement('div');
+
+  el.innerHTML = md.render(text);
+  return (el.textContent || '').replace(/"/g, '');
+}
 
 const handler: LambdaHandler = async (event) => {
   const tokenPayload = await validateToken(event);
@@ -23,7 +35,11 @@ const handler: LambdaHandler = async (event) => {
 
   const id = shortId();
   const post = JSON.parse(event.body || '{}');
-  const { title, text } = post;
+  const { title: _title, text } = post;
+
+  if (_title.length > 500) {
+    return { statusCode: 400 };
+  }
 
   const dynamodb = new DynamoDB();
 
@@ -42,18 +58,47 @@ const handler: LambdaHandler = async (event) => {
     .promise();
 
   const createdDate = new Date().toISOString();
+  const description = getDescription(text);
+  const title = sanitizeHtml(_title);
 
-  const html = `<html>
+  const html = `<!DOCTYPE html>
+    <html lang="en">
     <![CDATA[${JSON.stringify({
       summary: Buffer.from(
-        sanitizeHtml(title || text.substring(0, 100)),
+        sanitizeHtml(_title || text.substring(0, 100)),
       ).toString('base64'),
       createdDate,
     })}]]>
-    <head>${head}</head>
+    <head>
+      ${head}
+      <title>${title}</title>
+      <meta
+        name="description"
+        content="${description}"
+      />
+      <meta
+        name="twitter:title"
+        content="${title}"
+      />
+      <meta
+        name="twitter:description"
+        content="${description}"
+      />
+      <meta property="og:title" content="${title}">
+      <meta property="og:site_name" content="longtweet.io">
+      <meta property="og:url" content="https://longtweet.io/${id}">
+      <meta property="og:description" content="${description}">
+      <meta property="og:type" content="website">
+      <meta name="copyright" content="Copyright © 2020 Rico Kahler" />
+      <meta name="author" content="${sanitizeHtml(handle)}" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+      <link rel="manifest" href="/site.webmanifest">
+    </head>
     <body>${render(
       <Post
-        title={title}
+        title={_title}
         text={text}
         user={user.toString()}
         postId={id}
