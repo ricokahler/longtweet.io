@@ -29,7 +29,7 @@ function Compose() {
         e.returnValue = '';
       }
     };
-    window.addEventListener('unload', handler);
+    window.addEventListener('beforeunload', handler);
 
     return () => window.removeEventListener('beforeunload', handler);
   }, [getTitle, getText]);
