@@ -3,7 +3,7 @@ import TwitterLogo from './twitter-logo';
 import CircleNotch from './circle-notch';
 import { Redirect } from './router';
 import { useUser } from './user';
-import { login } from './auth';
+import { login } from '../helpers/auth';
 
 function Home() {
   const user = useUser();
@@ -26,9 +26,10 @@ function Home() {
     <>
       <h1 className="title">What is longtweet.io?</h1>
       <p>
-        Longtweet is an <a href="#">open-source</a>, ad&#8209;free,
-        tracker&#8209;free, free&#8209;to&#8209;use service that lets you post
-        your long thoughts.
+        Longtweet is an{' '}
+        <a href="https://github.com/ricokahler/longtweet.io">open-source</a>,
+        ad&#8209;free, tracker&#8209;free, free&#8209;to&#8209;use service that
+        lets you post your long thoughts.
       </p>
       <p>That's right. No ads. No trackers. As simple as that.</p>
       <button

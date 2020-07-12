@@ -1,5 +1,5 @@
 import React, { useContext, createContext, useState, useEffect } from 'react';
-import { listen, getLoggedIn, getUserInfo } from './auth';
+import { listen, getLoggedIn, getUserInfo } from '../helpers/auth';
 
 interface UserContextValue {
   handle: string | null;

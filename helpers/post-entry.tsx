@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
-import Post from './post';
-import '../src/app/index.css';
+import Post from '../components/post';
+import '../components/app.css';
 import initAuthorControls from './init-author-controls';
 
 const container = document.createElement('div');

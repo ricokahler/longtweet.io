@@ -3,7 +3,7 @@ import render from 'preact-render-to-string';
 import React from 'react';
 import { JSDOM } from 'jsdom';
 import head from './head';
-import App from '../src/app';
+import App from '../components/app';
 
 class ServerRenderPlugin implements webpack.Plugin {
   apply(compiler: webpack.Compiler) {

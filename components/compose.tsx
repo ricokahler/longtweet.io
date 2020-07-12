@@ -3,8 +3,8 @@ import usePull from 'use-pull';
 import PaperPlane from './paper-plane';
 import { Redirect } from './router';
 import { useUser } from './user';
-import { getToken } from './auth';
-import fetch from './wrapped-fetch';
+import { getToken } from '../helpers/auth';
+import fetch from '../helpers/wrapped-fetch';
 
 function Compose() {
   const user = useUser();

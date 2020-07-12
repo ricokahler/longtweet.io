@@ -3,12 +3,12 @@ const path = require('path');
 const fs = require('fs');
 const { EnvironmentPlugin } = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const StaticRenderPlugin = require('./utils/static-render-plugin').default;
+const StaticRenderPlugin = require('./helpers/static-render-plugin').default;
 const WebpackModules = require('webpack-modules');
 
 function getLambdaPaths() {
   const files = fs
-    .readdirSync(path.resolve(__dirname, './src/lambdas'))
+    .readdirSync(path.resolve(__dirname, './lambdas'))
     .map((filename) => filename.substring(0, filename.length - 3));
 
   return files;
@@ -16,7 +16,7 @@ function getLambdaPaths() {
 
 module.exports = {
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
-  entry: require.resolve('./utils/app-entry'),
+  entry: require.resolve('./helpers/app-entry'),
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'longtweet.js',

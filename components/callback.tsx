@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Redirect } from './router';
-import { handleCallback } from './auth';
+import { handleCallback } from '../helpers/auth';
 import { useUser } from './user';
 import CircleNotch from './circle-notch';
 

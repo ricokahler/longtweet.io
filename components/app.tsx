@@ -4,7 +4,7 @@ import Callback from './callback';
 import Home from './home';
 import Compose from './compose';
 import About from './about';
-import { UserProvider, useUser } from './user';
+import { UserProvider } from './user';
 import Header from './header';
 import Footer from './footer';
 import CircleNotch from './circle-notch';
@@ -12,7 +12,6 @@ const Privacy = lazy(() => import('./privacy'));
 
 function App() {
   const { path } = useRouter();
-  const user = useUser();
 
   return (
     <>

@@ -3,7 +3,6 @@ import webpack from 'webpack';
 import { createFsFromVolume, Volume } from 'memfs';
 import path from 'path';
 import webpackConfig from '../webpack.config';
-import fs from 'fs';
 
 const extensionMap: { [key: string]: string | undefined } = {
   js: 'text/javascript',

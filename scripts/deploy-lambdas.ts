@@ -2,7 +2,7 @@ import { Lambda } from 'aws-sdk';
 import JsZip from 'jszip';
 import fs from 'fs';
 import path from 'path';
-import bundle from '../utils/bundle';
+import bundle from '../helpers/bundle';
 
 async function updateLambda(filename: string) {
   const filenameSplit = filename.split('/');
@@ -44,19 +44,19 @@ async function updateLambda(filename: string) {
 
 async function main() {
   const lambdaDirContents = await fs.promises.readdir(
-    path.resolve(__dirname, '../src/lambdas'),
+    path.resolve(__dirname, '../lambdas'),
   );
 
   const lambdaFilenames = (
     await Promise.all(
       lambdaDirContents.filter(async (name) => {
         const stats = await fs.promises.stat(
-          path.resolve(__dirname, `../src/lambdas/${name}`),
+          path.resolve(__dirname, `../lambdas/${name}`),
         );
         return !stats.isDirectory();
       }),
     )
-  ).map((name) => path.resolve(__dirname, `../src/lambdas/${name}`));
+  ).map((name) => path.resolve(__dirname, `../lambdas/${name}`));
 
   await Promise.all(
     lambdaFilenames.map(async (filename) => updateLambda(filename)),

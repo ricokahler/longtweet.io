@@ -20,7 +20,7 @@
     "local-lambda": "node ./scripts/register -- ./scripts/local-lambda",
     "start": "webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:post": "webpack-dev-server --config ./utils/post.webpack.config.js"
+    "start:post": "webpack-dev-server --config ./helpers/post.webpack.config.js"
   },
   "dependencies": {
     "@babel/core": "^7.10.4",

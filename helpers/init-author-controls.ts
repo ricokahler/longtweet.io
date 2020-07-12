@@ -1,4 +1,4 @@
-import { getLoggedIn, getUserInfo } from '../src/app/auth';
+import { getLoggedIn, getUserInfo } from './auth';
 
 function initAuthorControls() {
   if (!getLoggedIn()) {

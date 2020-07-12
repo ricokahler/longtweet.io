@@ -1,8 +1,8 @@
 import React from 'react';
-import { Router } from '../src/app/router';
-import { UserProvider } from '../src/app/user';
-import Header from '../src/app/header';
-import Footer from '../src/app/footer';
+import { Router } from '../components/router';
+import { UserProvider } from '../components/user';
+import Header from '../components/header';
+import Footer from '../components/footer';
 import MarkdownIt from 'markdown-it';
 
 const md = new MarkdownIt('default', {});

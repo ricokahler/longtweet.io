@@ -1,9 +1,9 @@
 import express from 'express';
-import * as createPost from '../src/lambdas/create-post';
-import * as deletePost from '../src/lambdas/delete-post';
-import * as sessionId from '../src/lambdas/session-id';
-import * as signIn from '../src/lambdas/sign-in';
-import * as token from '../src/lambdas/token';
+import * as createPost from '../lambdas/create-post';
+import * as deletePost from '../lambdas/delete-post';
+import * as sessionId from '../lambdas/session-id';
+import * as signIn from '../lambdas/sign-in';
+import * as token from '../lambdas/token';
 
 const app = express();
 const api = express.Router();

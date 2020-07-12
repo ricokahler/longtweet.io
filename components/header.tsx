@@ -1,5 +1,4 @@
 import React from 'react';
-import { logout } from './auth';
 import { useUser } from './user';
 import { useRouter } from './router';
 import Profile from './profile';

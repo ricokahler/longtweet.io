@@ -3,8 +3,8 @@ import { S3, DynamoDB } from 'aws-sdk';
 import shortId from 'shortid';
 import validateToken from '../helpers/validate-token';
 import render from 'preact-render-to-string';
-import Post from '../../utils/post';
-import head from '../../utils/head';
+import Post from '../components/post';
+import head from '../helpers/head';
 import wrapLambda from '../helpers/wrap-lambda';
 
 const handler: LambdaHandler = async (event) => {
