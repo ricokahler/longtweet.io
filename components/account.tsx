@@ -36,7 +36,7 @@ function Account() {
         if (!match) continue;
         try {
           const { summary, createdDate } = JSON.parse(match[1]);
-          posts.push({ id, summary, createdDate });
+          posts.push({ id, summary: atob(summary), createdDate });
         } catch {}
       }
 

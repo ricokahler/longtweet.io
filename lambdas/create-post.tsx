@@ -6,6 +6,7 @@ import render from 'preact-render-to-string';
 import Post from '../components/post';
 import head from '../helpers/head';
 import wrapLambda from '../helpers/wrap-lambda';
+import sanitizeHtml from 'sanitize-html';
 
 const handler: LambdaHandler = async (event) => {
   const tokenPayload = await validateToken(event);
@@ -44,7 +45,9 @@ const handler: LambdaHandler = async (event) => {
 
   const html = `<html>
     <![CDATA[${JSON.stringify({
-      summary: title || text.substring(0, 100),
+      summary: Buffer.from(
+        sanitizeHtml(title || text.substring(0, 100)),
+      ).toString('base64'),
       createdDate,
     })}]]>
     <head>${head}</head>
