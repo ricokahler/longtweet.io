@@ -1,4 +1,4 @@
-import { S3 } from 'aws-sdk';
+import { S3, DynamoDB, CloudFront } from 'aws-sdk';
 import validateToken from '../helpers/validate-token';
 import wrapLambda from '../helpers/wrap-lambda';
 
@@ -17,6 +17,8 @@ const handler: LambdaHandler = async (event) => {
   const { user } = tokenPayload;
 
   const s3 = new S3();
+  const dynamodb = new DynamoDB();
+  const cloudFront = new CloudFront();
 
   if (event.httpMethod !== 'POST') {
     return { statusCode: 404 };
@@ -60,6 +62,48 @@ const handler: LambdaHandler = async (event) => {
       {
         Bucket: 'longtweet.io',
         Key: id,
+      },
+      (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      },
+    );
+  });
+
+  await new Promise((resolve, reject) => {
+    dynamodb.deleteItem(
+      {
+        TableName: 'longtweet-posts',
+        Key: {
+          post_id: {
+            S: id,
+          },
+        },
+      },
+      (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      },
+    );
+  });
+
+  await new Promise((resolve, reject) => {
+    cloudFront.createInvalidation(
+      {
+        DistributionId: process.env.DISTRIBUTION_ID!,
+        InvalidationBatch: {
+          CallerReference: Date.now().toString(),
+          Paths: {
+            Quantity: 1,
+            Items: [`/${id}`],
+          },
+        },
       },
       (err) => {
         if (err) {
