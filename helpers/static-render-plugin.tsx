@@ -60,8 +60,6 @@ class ServerRenderPlugin implements webpack.Plugin {
           .serialize()
           .replace(/<html>/, '<html lang="en">')}`;
 
-        console.log(html);
-
         compilation.assets['index.html'] = {
           source: () => html,
           size: () => html.length,
