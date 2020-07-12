@@ -26,28 +26,19 @@ const handler: LambdaHandler = async (event) => {
 
   const dynamodb = new DynamoDB();
 
-  await new Promise((resolve, reject) => {
-    dynamodb.putItem(
-      {
-        TableName: 'longtweet-posts',
-        Item: {
-          post_id: {
-            S: id,
-          },
-          user_id: {
-            N: user.toString(),
-          },
+  await dynamodb
+    .putItem({
+      TableName: 'longtweet-posts',
+      Item: {
+        post_id: {
+          S: id,
+        },
+        user_id: {
+          N: user.toString(),
         },
       },
-      (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      },
-    );
-  });
+    })
+    .promise();
 
   const createdDate = new Date().toISOString();
 
@@ -71,25 +62,16 @@ const handler: LambdaHandler = async (event) => {
     </body>
   </html>`;
 
-  await new Promise((resolve, reject) => {
-    s3.upload(
-      {
-        Bucket: 'longtweet.io',
-        Key: id,
-        Body: Buffer.from(html),
-        ACL: 'public-read',
-        ContentType: 'text/html',
-        Tagging: `user=${encodeURIComponent(user)}`,
-      },
-      (err: any) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      },
-    );
-  });
+  await s3
+    .upload({
+      Bucket: 'longtweet.io',
+      Key: id,
+      Body: Buffer.from(html),
+      ACL: 'public-read',
+      ContentType: 'text/html',
+      Tagging: `user=${encodeURIComponent(user)}`,
+    })
+    .promise();
 
   return {
     statusCode: 201,

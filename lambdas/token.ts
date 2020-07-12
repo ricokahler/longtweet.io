@@ -22,33 +22,25 @@ const handler: LambdaHandler = async (event) => {
 
   const dynamodb = new DynamoDB();
 
-  const item = await new Promise<DynamoDB.AttributeMap | undefined>(
-    (resolve, reject) => {
-      dynamodb.getItem(
-        {
-          TableName: 'longtweet-login',
-          Key: {
-            session_id: {
-              S: sessionId,
-            },
-          },
+  const item = await dynamodb
+    .getItem({
+      TableName: 'longtweet-login',
+      Key: {
+        session_id: {
+          S: sessionId,
         },
-        (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result.Item);
-          }
-        },
-      );
-    },
-  );
+      },
+    })
+    .promise();
 
   if (!item) {
     return { statusCode: 404 };
   }
 
-  if (item.session_id.S !== sessionId || item.oauth_token.S !== oauthToken) {
+  if (
+    item.Item?.session_id.S !== sessionId ||
+    item.Item?.oauth_token.S !== oauthToken
+  ) {
     return { statusCode: 403 };
   }
 
@@ -105,43 +97,34 @@ const handler: LambdaHandler = async (event) => {
 
   const sevenDays = 1000 * 60 * 60 * 24 * 7;
 
-  await new Promise((resolve, reject) => {
-    dynamodb.putItem(
-      {
-        TableName: 'longtweet-users',
-        Item: {
-          token_id: {
-            S: tokenId,
-          },
-          user_id: {
-            N: userId,
-          },
-          oauth_token: {
-            S: token,
-          },
-          oauth_token_secret: {
-            S: tokenSecret,
-          },
-          handle: {
-            S: handle,
-          },
-          signature: {
-            S: signature,
-          },
-          exp: {
-            N: Math.floor((Date.now() + sevenDays) / 1000).toString(),
-          },
+  await dynamodb
+    .putItem({
+      TableName: 'longtweet-users',
+      Item: {
+        token_id: {
+          S: tokenId,
+        },
+        user_id: {
+          N: userId,
+        },
+        oauth_token: {
+          S: token,
+        },
+        oauth_token_secret: {
+          S: tokenSecret,
+        },
+        handle: {
+          S: handle,
+        },
+        signature: {
+          S: signature,
+        },
+        exp: {
+          N: Math.floor((Date.now() + sevenDays) / 1000).toString(),
         },
       },
-      (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      },
-    );
-  });
+    })
+    .promise();
 
   return {
     statusCode: 200,

@@ -23,21 +23,12 @@ async function updateLambda(filename: string) {
   const zipFile = await zip.generateAsync({ type: 'nodebuffer' });
 
   console.log(`Uploading ${functionName}…`);
-  await new Promise((resolve, reject) => {
-    lambda.updateFunctionCode(
-      {
-        FunctionName: functionName,
-        ZipFile: zipFile,
-      },
-      (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      },
-    );
-  });
+  await lambda
+    .updateFunctionCode({
+      FunctionName: functionName,
+      ZipFile: zipFile,
+    })
+    .promise();
 
   console.timeEnd(functionName);
 }

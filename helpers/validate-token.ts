@@ -24,27 +24,18 @@ async function validateToken(event: LambdaEvent): Promise<TokenPayload | null> {
   const payload = JSON.parse(Buffer.from(encodedPayload, 'base64').toString());
   const { user, exp } = payload as TokenPayload;
 
-  const results = await new Promise<DynamoDB.QueryOutput>((resolve, reject) => {
-    dynamodb.query(
-      {
-        ExpressionAttributeValues: {
-          ':user_id': {
-            N: user.toString(),
-          },
+  const results = await dynamodb
+    .query({
+      ExpressionAttributeValues: {
+        ':user_id': {
+          N: user.toString(),
         },
-        KeyConditionExpression: 'user_id = :user_id',
-        TableName: 'longtweet-users',
-        IndexName: 'user_id-index',
       },
-      (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      },
-    );
-  });
+      KeyConditionExpression: 'user_id = :user_id',
+      TableName: 'longtweet-users',
+      IndexName: 'user_id-index',
+    })
+    .promise();
 
   const items = (results.Items || [])
     .map((item) => {

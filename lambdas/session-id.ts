@@ -10,28 +10,19 @@ const handler: LambdaHandler = async (event) => {
 
   const dynamodb = new DynamoDB();
 
-  await new Promise((resolve, reject) => {
-    dynamodb.putItem(
-      {
-        TableName: 'longtweet-login',
-        Item: {
-          session_id: {
-            S: sessionId,
-          },
-          exp: {
-            N: Math.floor((Date.now() + 2 * 1000 * 60) / 1000).toString(),
-          },
+  await dynamodb
+    .putItem({
+      TableName: 'longtweet-login',
+      Item: {
+        session_id: {
+          S: sessionId,
+        },
+        exp: {
+          N: Math.floor((Date.now() + 2 * 1000 * 60) / 1000).toString(),
         },
       },
-      (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      },
-    );
-  });
+    })
+    .promise();
 
   return {
     statusCode: 200,

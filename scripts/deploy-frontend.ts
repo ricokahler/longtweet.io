@@ -76,24 +76,15 @@ async function main() {
         throw new Error(`No matching mime type for "${name}"`);
       }
 
-      await new Promise((resolve, reject) => {
-        s3.upload(
-          {
-            Bucket: 'longtweet.io',
-            Key: name,
-            ACL: 'public-read',
-            ContentType: mimeType,
-            Body: buffer,
-          },
-          (err) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve();
-            }
-          },
-        );
-      });
+      await s3
+        .upload({
+          Bucket: 'longtweet.io',
+          Key: name,
+          ACL: 'public-read',
+          ContentType: mimeType,
+          Body: buffer,
+        })
+        .promise();
 
       console.timeEnd(name);
     }),
@@ -111,29 +102,18 @@ async function main() {
 
   console.log('Creating CloudFront invalidation…');
   const cloudFront = new CloudFront();
-  const invalidationResult = await new Promise<
-    CloudFront.CreateInvalidationResult
-  >((resolve, reject) => {
-    cloudFront.createInvalidation(
-      {
-        DistributionId: process.env.DISTRIBUTION_ID!,
-        InvalidationBatch: {
-          CallerReference: Date.now().toString(),
-          Paths: {
-            Quantity: distDir.length + 1,
-            Items: [...distDir.map((dir) => `/${dir}`), '/post.js'],
-          },
+  const invalidationResult = await cloudFront
+    .createInvalidation({
+      DistributionId: process.env.DISTRIBUTION_ID!,
+      InvalidationBatch: {
+        CallerReference: Date.now().toString(),
+        Paths: {
+          Quantity: distDir.length + 1,
+          Items: [...distDir.map((dir) => `/${dir}`), '/post.js'],
         },
       },
-      (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      },
-    );
-  });
+    })
+    .promise();
 
   const invalidationId = invalidationResult.Invalidation?.Id;
   if (!invalidationId) {
@@ -141,22 +121,12 @@ async function main() {
   }
 
   console.log('Waiting for invalidation completion (takes a bit)…');
-  await new Promise((resolve, reject) => {
-    cloudFront.waitFor(
-      'invalidationCompleted',
-      {
-        DistributionId: process.env.DISTRIBUTION_ID!,
-        Id: invalidationId,
-      },
-      (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      },
-    );
-  });
+  await cloudFront
+    .waitFor('invalidationCompleted', {
+      DistributionId: process.env.DISTRIBUTION_ID!,
+      Id: invalidationId,
+    })
+    .promise();
 
   console.log('DONE');
 }

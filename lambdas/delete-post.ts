@@ -1,6 +1,7 @@
 import { S3, DynamoDB, CloudFront } from 'aws-sdk';
 import validateToken from '../helpers/validate-token';
 import wrapLambda from '../helpers/wrap-lambda';
+import { v4 as uuid } from 'uuid';
 
 const handler: LambdaHandler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
@@ -57,63 +58,36 @@ const handler: LambdaHandler = async (event) => {
     return { statusCode: 403 };
   }
 
-  await new Promise((resolve, reject) => {
-    s3.deleteObject(
-      {
-        Bucket: 'longtweet.io',
-        Key: id,
-      },
-      (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      },
-    );
-  });
+  await s3
+    .deleteObject({
+      Bucket: 'longtweet.io',
+      Key: id,
+    })
+    .promise();
 
-  await new Promise((resolve, reject) => {
-    dynamodb.deleteItem(
-      {
-        TableName: 'longtweet-posts',
-        Key: {
-          post_id: {
-            S: id,
-          },
+  await dynamodb
+    .deleteItem({
+      TableName: 'longtweet-posts',
+      Key: {
+        post_id: {
+          S: id,
         },
       },
-      (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      },
-    );
-  });
+    })
+    .promise();
 
-  await new Promise((resolve, reject) => {
-    cloudFront.createInvalidation(
-      {
-        DistributionId: process.env.DISTRIBUTION_ID!,
-        InvalidationBatch: {
-          CallerReference: Date.now().toString(),
-          Paths: {
-            Quantity: 1,
-            Items: [`/${id}`],
-          },
+  await cloudFront
+    .createInvalidation({
+      DistributionId: process.env.DISTRIBUTION_ID!,
+      InvalidationBatch: {
+        CallerReference: `${uuid()}-${Date.now().toString()}`,
+        Paths: {
+          Quantity: 1,
+          Items: [`/${id}`],
         },
       },
-      (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      },
-    );
-  });
+    })
+    .promise();
 
   return { statusCode: 204 };
 };
