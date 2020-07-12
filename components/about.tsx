@@ -39,8 +39,8 @@ function About() {
         <a href="https://aws.amazon.com/s3/pricing/">
           S3 storage and access is very cheap
         </a>{' '}
-        and this website is very small (each post is rough 2kB-5kB) in size.
-        Each page view costs roughly $0.0000004-$0.000002.
+        and this website is very small (each post is 2kB-5kB) in size. Each page
+        view costs roughly $0.0000004-$0.000002.
       </p>
       <p>
         Though there are other costs, the main cost of viewing a post is
