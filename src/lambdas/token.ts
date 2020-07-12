@@ -3,32 +3,20 @@ import fetch from 'node-fetch';
 import OAuth from 'oauth-1.0a';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
+import wrappedLambda from '../helpers/wrap-lambda';
 
-const corsHeaders = {
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Origin': 'https://longtweet.io',
-  'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
-};
-
-async function handler(event: any) {
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 204,
-      headers: corsHeaders,
-    };
-  }
-
+const handler: LambdaHandler = async (event) => {
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 404, headers: corsHeaders };
+    return { statusCode: 404 };
   }
 
   if (!event.body) {
-    return { statusCode: 400, headers: corsHeaders };
+    return { statusCode: 400 };
   }
 
   const { sessionId, oauthToken, oauthVerifier } = JSON.parse(event.body);
   if (!sessionId || !oauthToken || !oauthVerifier) {
-    return { statusCode: 400, headers: corsHeaders };
+    return { statusCode: 400 };
   }
 
   const dynamodb = new DynamoDB();
@@ -56,11 +44,11 @@ async function handler(event: any) {
   );
 
   if (!item) {
-    return { statusCode: 404, headers: corsHeaders };
+    return { statusCode: 404 };
   }
 
   if (item.session_id.S !== sessionId || item.oauth_token.S !== oauthToken) {
-    return { statusCode: 403, headers: corsHeaders };
+    return { statusCode: 403 };
   }
 
   const oauth = new OAuth({
@@ -152,7 +140,6 @@ async function handler(event: any) {
 
   return {
     statusCode: 200,
-    headers: corsHeaders,
     body: JSON.stringify({
       token: jwt.sign(
         {
@@ -164,6 +151,7 @@ async function handler(event: any) {
       ),
     }),
   };
-}
+};
 
-export { handler };
+const wrapped = wrappedLambda(handler);
+export { wrapped as handler };

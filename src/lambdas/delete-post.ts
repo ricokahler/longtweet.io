@@ -1,47 +1,28 @@
 import { S3 } from 'aws-sdk';
 import validateToken from '../helpers/validate-token';
+import wrapLambda from '../helpers/wrap-lambda';
 
-const corsHeaders = {
-  'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-  'Access-Control-Allow-Origin': 'https://longtweet.io',
-  'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
-};
-
-async function handler(event: any) {
+const handler: LambdaHandler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 204,
-      headers: corsHeaders,
     };
   }
 
-  if (!(await validateToken(event))) {
-    return {
-      statusCode: 401,
-      headers: corsHeaders,
-    };
-  }
+  const tokenPayload = await validateToken(event);
 
-  const match = /bearer\s*(.*)/i.exec(event.headers.Authorization);
-  if (!match) {
-    return false;
+  if (!tokenPayload) {
+    return { statusCode: 401 };
   }
-  const token = match[1];
-
-  const [, encodedPayload] = token.split('.');
-  const payload = JSON.parse(Buffer.from(encodedPayload, 'base64').toString());
-  const { user } = payload;
+  const { user } = tokenPayload;
 
   const s3 = new S3();
 
   if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 404,
-      headers: corsHeaders,
-    };
+    return { statusCode: 404 };
   }
 
-  const { id } = JSON.parse(event.body);
+  const { id } = JSON.parse(event.body || '{}');
 
   const objectTaggingOutput = await new Promise<S3.GetObjectTaggingOutput | null>(
     (resolve) => {
@@ -62,10 +43,7 @@ async function handler(event: any) {
   );
 
   if (!objectTaggingOutput) {
-    return {
-      statusCode: 404,
-      headers: corsHeaders,
-    };
+    return { statusCode: 404 };
   }
 
   const tag = objectTaggingOutput.TagSet.find(({ Key }) => Key === 'user');
@@ -74,10 +52,7 @@ async function handler(event: any) {
   }
 
   if (tag.Value !== user.toString()) {
-    return {
-      statusCode: 403,
-      headers: corsHeaders,
-    };
+    return { statusCode: 403 };
   }
 
   await new Promise((resolve, reject) => {
@@ -96,10 +71,8 @@ async function handler(event: any) {
     );
   });
 
-  return {
-    statusCode: 204,
-    headers: corsHeaders,
-  };
-}
+  return { statusCode: 204 };
+};
 
-export { handler };
+const wrapped = wrapLambda(handler);
+export { wrapped as handler };

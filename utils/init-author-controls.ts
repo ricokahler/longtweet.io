@@ -21,9 +21,13 @@ function initAuthorControls() {
     return;
   }
 
-  authorControls.style.display = null;
+  authorControls.style.display = '';
 
   const deleteButton = document.querySelector<HTMLButtonElement>('#delete');
+  if (!deleteButton) {
+    return;
+  }
+
   deleteButton.addEventListener('click', () => {
     if (
       !window.confirm(

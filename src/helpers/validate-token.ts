@@ -4,14 +4,17 @@ import OAuth from 'oauth-1.0a';
 import crypto from 'crypto';
 import fetch from 'node-fetch';
 
-async function validateToken(event: any) {
-  if (process.env.DEV_ENV) {
-    return true;
-  }
+interface TokenPayload {
+  exp: number;
+  iat: number;
+  user: number;
+  handle: string;
+}
 
-  const match = /bearer\s*(.*)/i.exec(event.headers.Authorization);
+async function validateToken(event: LambdaEvent): Promise<TokenPayload | null> {
+  const match = /bearer\s*(.*)/i.exec(event.headers.Authorization || '');
   if (!match) {
-    return false;
+    return null;
   }
   const token = match[1];
 
@@ -51,17 +54,25 @@ async function validateToken(event: any) {
   }
 
   // throws if invalid
-  const validToken = (() => {
+  const tokenPayload = (() => {
     try {
-      jwt.verify(token, signature);
-      return true;
+      const payload = jwt.verify(token, signature);
+      if (typeof payload !== 'object') {
+        throw new Error('Expected token payload to be an object');
+      }
+      return payload as TokenPayload;
     } catch {
-      return false;
+      return null;
     }
   })();
 
-  if (!validToken) {
-    return false;
+  if (!tokenPayload) {
+    return null;
+  }
+
+  const { exp } = tokenPayload;
+  if (Date.now() >= exp * 1000) {
+    return null;
   }
 
   const oauth = new OAuth({
@@ -70,12 +81,8 @@ async function validateToken(event: any) {
       secret: process.env.TWITTER_CONSUMER_SECRET!,
     },
     signature_method: 'HMAC-SHA1',
-    hash_function: (base_string, key) => {
-      return crypto
-        .createHmac('sha1', key)
-        .update(base_string)
-        .digest('base64');
-    },
+    hash_function: (base_string, key) =>
+      crypto.createHmac('sha1', key).update(base_string).digest('base64'),
   });
 
   const response = await fetch(
@@ -98,7 +105,11 @@ async function validateToken(event: any) {
 
   const json = await response.json();
 
-  return json.id === id;
+  if (json.id !== id) {
+    return null;
+  }
+
+  return payload;
 }
 
 export default validateToken;

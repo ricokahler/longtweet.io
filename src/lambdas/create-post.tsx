@@ -5,52 +5,27 @@ import validateToken from '../helpers/validate-token';
 import render from 'preact-render-to-string';
 import Post from '../../utils/post';
 import head from '../../utils/head';
+import wrapLambda from '../helpers/wrap-lambda';
 
-const corsHeaders = {
-  'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-  'Access-Control-Allow-Origin': 'https://longtweet.io',
-  'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
-};
-
-async function handler(event: any) {
+const handler: LambdaHandler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 204,
-      headers: corsHeaders,
-    };
+    return { statusCode: 204 };
   }
 
-  if (!(await validateToken(event))) {
-    return {
-      statusCode: 401,
-      headers: corsHeaders,
-    };
+  const tokenPayload = await validateToken(event);
+  if (!tokenPayload) {
+    return { statusCode: 401 };
   }
-
-  const match = /bearer\s*(.*)/i.exec(event.headers.Authorization);
-  if (!match) {
-    return {
-      statusCode: 401,
-      headers: corsHeaders,
-    };
-  }
-  const token = match[1];
-
-  const [, encodedPayload] = token.split('.');
-  const payload = JSON.parse(Buffer.from(encodedPayload, 'base64').toString());
-  const { user } = payload;
+  const { user } = tokenPayload;
 
   const s3 = new S3();
 
   if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 404,
-      headers: corsHeaders,
-    };
+    return { statusCode: 404 };
   }
 
   const id = shortId();
-  const post = JSON.parse(event.body);
+  const post = JSON.parse(event.body || '{}');
   const { title, text } = post;
 
   const dynamodb = new DynamoDB();
@@ -64,7 +39,7 @@ async function handler(event: any) {
             S: id,
           },
           user_id: {
-            N: user,
+            N: user.toString(),
           },
         },
       },
@@ -108,23 +83,8 @@ async function handler(event: any) {
   return {
     statusCode: 201,
     body: JSON.stringify({ id }),
-    headers: {
-      ...corsHeaders,
-    },
   };
-}
-
-// @ts-ignore
-const wrapped = async (event: any) => {
-  try {
-    return await handler(event);
-  } catch (e) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: e?.message, stack: e?.stack }),
-      headers: corsHeaders,
-    };
-  }
 };
 
+const wrapped = wrapLambda(handler);
 export { wrapped as handler };

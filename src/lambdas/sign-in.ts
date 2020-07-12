@@ -2,8 +2,9 @@ import fetch from 'node-fetch';
 import OAuth from 'oauth-1.0a';
 import crypto from 'crypto';
 import { DynamoDB } from 'aws-sdk';
+import wrappedLambda from '../helpers/wrap-lambda';
 
-async function handler(event: any) {
+const handler: LambdaHandler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 404 };
   }
@@ -112,6 +113,7 @@ async function handler(event: any) {
       location: `https://api.twitter.com/oauth/authenticate?oauth_token=${oauthToken}`,
     },
   };
-}
+};
 
-export { handler };
+const wrapped = wrappedLambda(handler);
+export { wrapped as handler };

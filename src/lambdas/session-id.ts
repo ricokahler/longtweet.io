@@ -1,7 +1,8 @@
 import { DynamoDB } from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
+import wrapLambda from '../helpers/wrap-lambda';
 
-async function handler(event: any) {
+const handler: LambdaHandler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 404 };
   }
@@ -34,13 +35,9 @@ async function handler(event: any) {
 
   return {
     statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Access-Control-Allow-Origin': 'https://longtweet.io',
-      'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
-    },
     body: JSON.stringify({ sessionId }),
   };
-}
+};
 
-export { handler };
+const wrapped = wrapLambda(handler);
+export { wrapped as handler };
