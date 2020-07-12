@@ -41,7 +41,15 @@ function Account() {
       }
 
       setLoading(false);
-      setPosts(posts);
+      setPosts(
+        posts
+          .slice()
+          .sort(
+            (a, b) =>
+              new Date(b.createdDate).getTime() -
+              new Date(a.createdDate).getTime(),
+          ),
+      );
     }
 
     getPosts().catch((e) => {
