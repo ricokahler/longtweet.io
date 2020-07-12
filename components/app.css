@@ -349,3 +349,7 @@ p {
 .post-listing:hover {
   background-color: #eee;
 }
+
+img {
+  max-width: 100%;
+}
