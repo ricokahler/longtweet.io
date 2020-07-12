@@ -2,6 +2,7 @@ import { S3, CloudFront } from 'aws-sdk';
 import webpack from 'webpack';
 import { createFsFromVolume, Volume } from 'memfs';
 import path from 'path';
+import zlib from 'zlib';
 import webpackConfig from '../webpack.config';
 import bundleInitPostControls from '../helpers/bundle-init-post-controls';
 
@@ -53,6 +54,18 @@ async function main() {
 
   // bundle post controls
   const postControls = await bundleInitPostControls();
+  const postControlsGzippedBuffer = await new Promise<Buffer>(
+    (resolve, reject) => {
+      zlib.gzip(Buffer.from(postControls), (err, res) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve(res);
+      });
+    },
+  );
 
   console.log('Uploading to S3…');
 
@@ -68,6 +81,17 @@ async function main() {
         path.resolve(__dirname, `../dist/${name}`),
       )) as Buffer;
 
+      const gzippedBuffer = await new Promise<Buffer>((resolve, reject) => {
+        zlib.gzip(buffer, (err, res) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          resolve(res);
+        });
+      });
+
       const nameSplit = name.split('.');
       const extension = nameSplit[nameSplit.length - 1];
       const mimeType = extensionMap[extension];
@@ -82,7 +106,8 @@ async function main() {
           Key: name,
           ACL: 'public-read',
           ContentType: mimeType,
-          Body: buffer,
+          ContentEncoding: 'gzip',
+          Body: gzippedBuffer,
         })
         .promise();
 
@@ -96,7 +121,8 @@ async function main() {
       Key: 'post.js',
       ACL: 'public-read',
       ContentType: 'text/javascript',
-      Body: postControls,
+      Body: postControlsGzippedBuffer,
+      ContentEncoding: 'gzip',
     })
     .promise();
 
