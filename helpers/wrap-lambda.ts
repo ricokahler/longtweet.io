@@ -24,6 +24,7 @@ function wrapLambda(handler: LambdaHandler): LambdaHandler {
         },
       };
     } catch (e) {
+      console.error(e);
       return {
         statusCode: 500,
         headers: corsHeaders,

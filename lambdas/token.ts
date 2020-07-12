@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import OAuth from 'oauth-1.0a';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
+import { v4 as uuid } from 'uuid';
 import wrappedLambda from '../helpers/wrap-lambda';
 
 const handler: LambdaHandler = async (event) => {
@@ -99,16 +100,19 @@ const handler: LambdaHandler = async (event) => {
     throw new Error('Missing data from oauth access_token response');
   }
 
+  const tokenId = uuid();
   const signature = crypto.randomBytes(64).toString('base64');
 
+  const sevenDays = 1000 * 60 * 60 * 24 * 7;
+
   await new Promise((resolve, reject) => {
-    // TODO: this currently overrides any previous logins. This is nice from a
-    // security standpoint but could possibly lead to a bad user experience
-    // where a user would be logged out by logging into another device.
     dynamodb.putItem(
       {
         TableName: 'longtweet-users',
         Item: {
+          token_id: {
+            S: tokenId,
+          },
           user_id: {
             N: userId,
           },
@@ -124,6 +128,9 @@ const handler: LambdaHandler = async (event) => {
           signature: {
             S: signature,
           },
+          exp: {
+            N: Math.floor((Date.now() + sevenDays) / 1000).toString(),
+          },
         },
       },
       (err) => {
@@ -135,8 +142,6 @@ const handler: LambdaHandler = async (event) => {
       },
     );
   });
-
-  const sevenDays = 1000 * 60 * 60 * 24 * 7;
 
   return {
     statusCode: 200,

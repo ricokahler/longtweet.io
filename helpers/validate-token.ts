@@ -22,55 +22,70 @@ async function validateToken(event: LambdaEvent): Promise<TokenPayload | null> {
 
   const [, encodedPayload] = token.split('.');
   const payload = JSON.parse(Buffer.from(encodedPayload, 'base64').toString());
-  const { user } = payload;
+  const { user, exp } = payload as TokenPayload;
 
-  const item = await new Promise<DynamoDB.AttributeMap>((resolve, reject) => {
-    dynamodb.getItem(
+  const results = await new Promise<DynamoDB.QueryOutput>((resolve, reject) => {
+    dynamodb.query(
       {
-        TableName: 'longtweet-users',
-        Key: {
-          user_id: {
+        ExpressionAttributeValues: {
+          ':user_id': {
             N: user.toString(),
           },
         },
+        KeyConditionExpression: 'user_id = :user_id',
+        TableName: 'longtweet-users',
+        IndexName: 'user_id-index',
       },
       (err, result) => {
         if (err) {
           reject(err);
         } else {
-          resolve(result.Item);
+          resolve(result);
         }
       },
     );
   });
 
-  const id = parseInt(item.user_id.N || '', 10);
-  const oauthToken = item.oauth_token.S;
-  const oauthTokenSecret = item.oauth_token_secret.S;
-  const signature = item.signature.S;
+  const items = (results.Items || [])
+    .map((item) => {
+      const userId = parseInt(item.user_id.N || '', 10);
+      const oauthToken = item.oauth_token.S;
+      const oauthTokenSecret = item.oauth_token_secret.S;
+      const signature = item.signature.S;
 
-  if (!oauthToken || !oauthTokenSecret || !signature || !id) {
-    throw new Error('Missing some fields from user entry');
-  }
-
-  // throws if invalid
-  const tokenPayload = (() => {
-    try {
-      const payload = jwt.verify(token, signature);
-      if (typeof payload !== 'object') {
-        throw new Error('Expected token payload to be an object');
+      if (!oauthToken || !oauthTokenSecret || !signature || !userId) {
+        return null;
       }
-      return payload as TokenPayload;
-    } catch {
-      return null;
+
+      return { userId, oauthToken, oauthTokenSecret, signature };
+    })
+    .filter(<T>(t: T): t is NonNullable<T> => Boolean(t));
+
+  const validToken = (() => {
+    for (const { signature, oauthToken, oauthTokenSecret } of items) {
+      try {
+        const payload = jwt.verify(token, signature);
+        if (typeof payload !== 'object') {
+          throw new Error('Expected token payload to be an object');
+        }
+
+        return {
+          oauthToken,
+          oauthTokenSecret,
+        };
+      } catch {
+        // jwt.verify throws if invalid
+      }
     }
+
+    return null;
   })();
 
-  if (!tokenPayload) {
+  if (!validToken) {
     return null;
   }
 
-  const { exp } = tokenPayload;
+  const { oauthToken, oauthTokenSecret } = validToken;
   if (Date.now() >= exp * 1000) {
     return null;
   }
@@ -105,7 +120,7 @@ async function validateToken(event: LambdaEvent): Promise<TokenPayload | null> {
 
   const json = await response.json();
 
-  if (json.id !== id) {
+  if (json.id !== user) {
     return null;
   }
 
