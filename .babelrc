@@ -1,0 +1,18 @@
+{
+  "presets": [
+    ["@babel/preset-env", { "targets": { "node": "current" } }],
+    "@babel/preset-typescript",
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    [
+      "babel-plugin-module-resolver",
+      {
+        "alias": {
+          "react": "preact/compat",
+          "react-dom": "preact/compat"
+        }
+      }
+    ]
+  ]
+}
