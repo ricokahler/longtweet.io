@@ -98,7 +98,7 @@ function Compose() {
       {text.length > 300000 && (
         <p className="caption">
           To prevent this platform from being abused, we limit posts to 300,000
-          characters (roughly 100 single-spaced pages)
+          characters (roughly 100 single-spaced pages).
         </p>
       )}
       <button
@@ -106,7 +106,11 @@ function Compose() {
         disabled={!text || text.length > 300000 || loading}
         onClick={async () => {
           setLoading(true);
-          if (!window.confirm('Are you sure want to post this?')) {
+          if (
+            !window.confirm(
+              'Are you sure want to post this?\nThis post will be publicly available even if your tweets are protected.',
+            )
+          ) {
             setLoading(false);
             return;
           }

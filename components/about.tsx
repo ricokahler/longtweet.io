@@ -8,10 +8,11 @@ function About() {
       <p>
         Longtweet is an{' '}
         <a href="https://github.com/ricokahler/longtweet.io">open-source</a>,
-        ad‑free, tracker‑free, free‑to‑use service that lets you post your long
-        thoughts.
+        ad‑free, tracker‑free, free‑to‑use blog service that integrates with
+        Twitter.
       </p>
       <p>That's right. No ads. No trackers. As simple as that.</p>
+      <p>Longtweet is not affiliated with Twitter in any way.</p>
       <h2 id="why">Why?</h2>
       <p>
         There have been other sites like this one that have empowered others to
@@ -31,26 +32,8 @@ function About() {
       </p>
       <h2 id="how">How?</h2>
       <p>
-        When you create a post, it creates an HTML and drops that page directly
-        into <a href="https://aws.amazon.com/s3/">Amazon S3</a>.
-      </p>
-      <p>That S3 bucket hosts this website so once it's uploaded, it's live.</p>
-      <p>
-        <a href="https://aws.amazon.com/s3/pricing/">
-          S3 storage and access is very cheap
-        </a>{' '}
-        and this website is very small (each post is 2kB-5kB) in size. Each page
-        view costs roughly $0.0000004-$0.000002.
-      </p>
-      <p>
-        Though there are other costs, the main cost of viewing a post is
-        drastically reduced with this model and is enough for me to support it
-        out of pocket for the time being.
-      </p>
-      <p>
-        If you’re a developer yourself, feel free to checkout{' '}
-        <a href="https://github.com/ricokahler/longtweet.io">the source code</a>{' '}
-        for this project. It's MIT licensed.
+        Blog post coming soon.
+        {/* <a href="/404">See here.</a> */}
       </p>
     </>
   );
