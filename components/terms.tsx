@@ -22,6 +22,7 @@ function Terms() {
         <li>
           This service is offered "as-is" without any warranty of any kind.
         </li>
+        <li>There are no uptime guarantees.</li>
         <li>These terms may change.</li>
       </ul>
 

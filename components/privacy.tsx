@@ -4,7 +4,12 @@ function Privacy() {
   return (
     <>
       <h1>Privacy Policy</h1>
-      <p>👋 Hey There,</p>
+      <p>
+        <span role="img" aria-label="wave">
+          👋
+        </span>{' '}
+        Hey There,
+      </p>
       <p>
         Author of longtweet here! Before you get in to the weeds of the
         templated policy statement, I want to give you the gist:
@@ -42,6 +47,17 @@ function Privacy() {
       <p>
         See the <a href="/about">about page</a> for more info.
       </p>
+      <hr />
+      <blockquote>
+        <strong>
+          <span role="img" aria-label="">
+            🚨
+          </span>{' '}
+          Important note:
+        </strong>{' '}
+        Your twitter visibility settings do not carry over. All posts here are
+        public, however, you can only access posts with a link.
+      </blockquote>
       <hr />
       <p>Last updated: July 10, 2020</p>
       <p>
