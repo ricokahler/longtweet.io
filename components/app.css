@@ -198,6 +198,7 @@ p {
   border: none;
   padding: 1rem 0.5rem;
   margin: 1rem 0;
+  outline: none;
 }
 
 .post-textarea {
@@ -208,6 +209,9 @@ p {
   border: none;
   resize: vertical;
   border-bottom: 1px solid #ddd;
+  outline: none;
+  font-size: 18px;
+  line-height: 1.5;
 }
 
 .checkbox {
