@@ -59,7 +59,10 @@ function Compose() {
         <br />
         {user.handle && (
           <>
-            <span className="emoji" role="img" aria-label="wave">👋</span> Writing as{' '}
+            <span className="emoji" role="img" aria-label="wave">
+              👋
+            </span>{' '}
+            Writing as{' '}
             <a
               href={`https://twitter.com/${user.handle}`}
               target="_blank"
@@ -69,16 +72,6 @@ function Compose() {
             </a>
           </>
         )}
-      </p>
-      <p>
-        <label className="caption auto-resize">
-          <div>Auto resize</div>&nbsp;
-          <input
-            type="checkbox"
-            checked={autoResize}
-            onChange={() => setAutoResize(!autoResize)}
-          />
-        </label>
       </p>
       <textarea
         className="post-textarea"
@@ -92,6 +85,16 @@ function Compose() {
           }
         }}
       />
+      <p>
+        <label className="caption auto-resize">
+          <div>Auto resize</div>&nbsp;
+          <input
+            type="checkbox"
+            checked={autoResize}
+            onChange={() => setAutoResize(!autoResize)}
+          />
+        </label>
+      </p>
       {text.length > 300000 && (
         <p className="caption">
           To prevent this platform from being abused, we limit posts to 300,000
