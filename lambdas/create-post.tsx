@@ -65,7 +65,7 @@ const handler: LambdaHandler = async (event) => {
           S: id,
         },
         user_id: {
-          N: user.toString(),
+          S: user.toString(),
         },
       },
     })

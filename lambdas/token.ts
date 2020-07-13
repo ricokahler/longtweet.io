@@ -105,7 +105,7 @@ const handler: LambdaHandler = async (event) => {
           S: tokenId,
         },
         user_id: {
-          N: userId,
+          S: userId,
         },
         oauth_token: {
           S: token,
@@ -131,7 +131,7 @@ const handler: LambdaHandler = async (event) => {
     body: JSON.stringify({
       token: jwt.sign(
         {
-          user: parseInt(userId, 10),
+          user: userId,
           handle,
           exp: Math.floor((Date.now() + sevenDays) / 1000),
         },

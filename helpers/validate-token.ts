@@ -7,7 +7,7 @@ import fetch from 'node-fetch';
 interface TokenPayload {
   exp: number;
   iat: number;
-  user: number;
+  user: string;
   handle: string;
 }
 
@@ -16,7 +16,7 @@ async function validateToken(event: LambdaEvent): Promise<TokenPayload | null> {
   if (!match) {
     return null;
   }
-  const token = match[1];
+  const token = match[1].trim();
 
   const dynamodb = new DynamoDB();
 
@@ -28,7 +28,7 @@ async function validateToken(event: LambdaEvent): Promise<TokenPayload | null> {
     .query({
       ExpressionAttributeValues: {
         ':user_id': {
-          N: user.toString(),
+          S: user.toString(),
         },
       },
       KeyConditionExpression: 'user_id = :user_id',
@@ -39,7 +39,7 @@ async function validateToken(event: LambdaEvent): Promise<TokenPayload | null> {
 
   const items = (results.Items || [])
     .map((item) => {
-      const userId = parseInt(item.user_id.N || '', 10);
+      const userId = item.user_id.S || '';
       const oauthToken = item.oauth_token.S;
       const oauthTokenSecret = item.oauth_token_secret.S;
       const signature = item.signature.S;
@@ -111,7 +111,7 @@ async function validateToken(event: LambdaEvent): Promise<TokenPayload | null> {
 
   const json = await response.json();
 
-  if (json.id !== user) {
+  if (json.id_str !== user) {
     return null;
   }
 

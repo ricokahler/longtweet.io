@@ -19,7 +19,7 @@ const handler: LambdaHandler = async (event) => {
     .query({
       ExpressionAttributeValues: {
         ':user_id': {
-          N: user.toString(),
+          S: user.toString(),
         },
       },
       KeyConditionExpression: 'user_id = :user_id',
