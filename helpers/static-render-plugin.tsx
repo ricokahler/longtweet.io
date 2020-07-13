@@ -2,7 +2,6 @@ import webpack from 'webpack';
 import render from 'preact-render-to-string';
 import React from 'react';
 import { JSDOM } from 'jsdom';
-import head from './head';
 import App from '../components/app';
 
 class ServerRenderPlugin implements webpack.Plugin {
@@ -17,7 +16,10 @@ class ServerRenderPlugin implements webpack.Plugin {
         const root = document.createElement('div');
         root.id = 'root';
 
-        document.head.innerHTML = `${head}
+        document.head.innerHTML = `
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="/main.css" />
         <title>longtweet.io</title>
         <meta
           name="description"

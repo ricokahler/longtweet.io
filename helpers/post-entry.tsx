@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import Post from '../components/post';
+import 'normalize.css';
 import '../components/app.css';
 import './init-post-controls';
 

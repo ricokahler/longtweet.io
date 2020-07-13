@@ -4,9 +4,37 @@ import shortId from 'shortid';
 import validateToken from '../helpers/validate-token';
 import render from 'preact-render-to-string';
 import Post from '../components/post';
-import head from '../helpers/head';
 import wrapLambda from '../helpers/wrap-lambda';
 import sanitizeHtml from 'sanitize-html';
+import zlib from 'zlib';
+
+const s3 = new S3();
+
+async function getObject(key: string, noUnzip = false) {
+  const obj = await s3
+    .getObject({
+      Bucket: 'longtweet.io',
+      Key: key,
+    })
+    .promise();
+
+  const body = obj.Body as Buffer;
+
+  if (noUnzip) {
+    return body;
+  }
+
+  const unzipped = await new Promise<Buffer>((resolve, reject) => {
+    zlib.unzip(body, (err, buffer) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(buffer);
+      }
+    });
+  });
+  return unzipped;
+}
 
 const handler: LambdaHandler = async (event) => {
   const tokenPayload = await validateToken(event);
@@ -14,8 +42,6 @@ const handler: LambdaHandler = async (event) => {
     return { statusCode: 401 };
   }
   const { user, handle } = tokenPayload;
-
-  const s3 = new S3();
 
   if (event.httpMethod !== 'POST') {
     return { statusCode: 404 };
@@ -50,6 +76,12 @@ const handler: LambdaHandler = async (event) => {
   const title =
     sanitizeHtml(_title).replace(/"/g, '') || `longtweet by @${handle}`;
 
+  const css = await getObject('main.css');
+  const postJs = await getObject('post.js');
+  const siteManifest = await getObject('site.webmanifest', true);
+  const favicon32 = await getObject('favicon-32x32.png', true);
+  const favicon16 = await getObject('favicon-16x16.png', true);
+
   const html = `<!DOCTYPE html>
     <html lang="en">
     <![CDATA[${JSON.stringify({
@@ -59,7 +91,9 @@ const handler: LambdaHandler = async (event) => {
       createdDate,
     })}]]>
     <head>
-      ${head}
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <style>${css.toString()}</style>
       <title>${title}</title>
       <meta
         name="description"
@@ -83,10 +117,15 @@ const handler: LambdaHandler = async (event) => {
         handle,
       )}" />
       <meta name="author" content="${sanitizeHtml(handle)}" />
-      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-      <link rel="manifest" href="/site.webmanifest">
+      <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,${favicon32.toString(
+        'base64',
+      )}">
+      <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,${favicon16.toString(
+        'base64',
+      )}">
+      <link rel="manifest" href="data:application/json;base64,${siteManifest.toString(
+        'base64',
+      )}">
     </head>
     <body>${render(
       <Post
@@ -98,17 +137,28 @@ const handler: LambdaHandler = async (event) => {
         handle={handle}
       />,
     )}
-    <script src="/post.js"></script>
+    <script>${postJs.toString()}</script>
     </body>
   </html>`;
+
+  const zippedHtml = await new Promise<Buffer>((resolve, reject) => {
+    zlib.gzip(html, (err, res) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res);
+      }
+    });
+  });
 
   await s3
     .upload({
       Bucket: 'longtweet.io',
       Key: id,
-      Body: Buffer.from(html),
+      Body: zippedHtml,
       ACL: 'public-read',
       ContentType: 'text/html',
+      ContentEncoding: 'gzip',
       Tagging: `user=${encodeURIComponent(user)}`,
     })
     .promise();
