@@ -30,9 +30,21 @@ function Account() {
       const posts: Post[] = [];
 
       for (const id of postIds) {
-        const postResponse = await fetch(`/${id}`);
+        const postResponse = await (async () => {
+          try {
+            return await fetch(`/${id}`);
+          } catch {
+            return null;
+          }
+        })();
+
+        if (!postResponse) continue;
+        if (postResponse.status === 401) {
+          logout();
+        }
+
         const post = await postResponse.text();
-        const match = /<!\[CDATA\[([^]*)]]>/.exec(post);
+        const match = /<!\[CDATA\[([^]]*)]]>/.exec(post);
         if (!match) continue;
         try {
           const { summary, createdDate } = JSON.parse(match[1]);
@@ -53,7 +65,6 @@ function Account() {
     }
 
     getPosts().catch((e) => {
-      logout();
       console.error(e);
     });
   }, []);
