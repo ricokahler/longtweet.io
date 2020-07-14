@@ -1,4 +1,4 @@
-# longtweet.io — a use case in on-demand static site generation
+# longtweet.io — a use case for on-demand static site generation
 
 How do you make a highly scalable, highly performant blogging service for as little server cost as possible?
 
@@ -36,7 +36,7 @@ So what do we do now?
 
 Instead of re-rendering the whole site, we pre-render a single static HTML page on each new post. The resulting HTML page can then be saved in some storage bucket and served over CDN.
 
-That's what on-demand SSG is — at the point in time where a user creates content, pre-render it.
+That's what on-demand SSG is — at the point in time when a user creates content, pre-render it.
 
 If hooked up correctly, this approach does not require _any_ backend code in order for the page to be viewed and scales extremely well.
 
@@ -44,7 +44,7 @@ If hooked up correctly, this approach does not require _any_ backend code in ord
 
 You're looking at it.
 
-You can login and [create a new post now](/compose).
+You can login and [create a new post now](/).
 
 When you create a new post, it calls an AWS lambda function. In that function is where this service takes your content, pre-renders it to a static HTML file, and saves it to an S3 bucket.
 
@@ -78,7 +78,7 @@ The minimalism makes a big difference for performance.
 
 Pictured left are the [lighthouse](https://developers.google.com/web/tools/lighthouse) scores for longtweet and on the right are the lighthouse scores for TwitLonger (with ads).
 
-The rest of the pages on longtweet are client-side generated with [preact](https://preactjs.com/). The resulting bundle there is around 30kB.
+The rest of the pages on longtweet are client-side rendered with [preact](https://preactjs.com/). The resulting bundle there is around 30kB.
 
 ## Drawbacks
 
