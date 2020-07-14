@@ -32,8 +32,7 @@ function About() {
       </p>
       <h2 id="how">How?</h2>
       <p>
-        Blog post coming soon.
-        {/* <a href="/404">See here.</a> */}
+        <a href="/3hiz8afxa">See this post to learn more.</a>
       </p>
     </>
   );
