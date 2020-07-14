@@ -141,7 +141,7 @@ p {
   border: none;
   padding: 1rem 1.25rem;
   border-radius: 99999px;
-  transition: all 250ms;
+  transition: background-color 250ms;
 }
 
 .twitter-button:hover,
