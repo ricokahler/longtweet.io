@@ -44,7 +44,7 @@ function Account() {
         }
 
         const post = await postResponse.text();
-        const match = /<!\[CDATA\[([^]]*)]]>/.exec(post);
+        const match = /<!\[CDATA\[([^\]]*)]]>/.exec(post);
         if (!match) continue;
         try {
           const { summary, createdDate } = JSON.parse(match[1]);
