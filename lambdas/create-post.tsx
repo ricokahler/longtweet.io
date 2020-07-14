@@ -112,7 +112,7 @@ const handler: LambdaHandler = async (event) => {
       <meta property="og:url" content="https://longtweet.io/${id}">
       <meta property="og:description" content="${description}">
       <meta property="og:type" content="website">
-      <meta property="og:image" content="https://longtweet.io/black.png">
+      <meta property="og:image" content="https://longtweet.io/android-chrome-512x512.png">
       <meta name="copyright" content="Copyright © 2020 ${sanitizeHtml(
         handle,
       )}" />
@@ -123,9 +123,7 @@ const handler: LambdaHandler = async (event) => {
       <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,${favicon16.toString(
         'base64',
       )}">
-      <link rel="manifest" href="data:application/json;base64,${siteManifest.toString(
-        'base64',
-      )}">
+      <link rel="manifest" href="/site.webmanifest">
     </head>
     <body>${render(
       <Post
