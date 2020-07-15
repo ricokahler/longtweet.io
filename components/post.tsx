@@ -41,7 +41,7 @@ function Post({ title, text, user, postId, createdDate, handle }: Props) {
               `https://longtweet.io/${postId}`,
             )}`}
             target="_blank"
-            rel="noreferrer noopener"
+            rel="noreferrer"
           >
             Tweet
           </a>
@@ -53,7 +53,11 @@ function Post({ title, text, user, postId, createdDate, handle }: Props) {
         <p className="caption">
           <span>
             — by{' '}
-            <a href={`https://twitter.com/${encodeURIComponent(handle)}`}>
+            <a
+              href={`https://twitter.com/${encodeURIComponent(handle)}`}
+              target="_blank"
+              rel="noreferrer"
+            >
               @{handle}
             </a>
             ,
