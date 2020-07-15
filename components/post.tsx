@@ -5,7 +5,9 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import MarkdownIt from 'markdown-it';
 
-const md = new MarkdownIt('default', {});
+const md = new MarkdownIt('default', {
+  linkify: true,
+});
 
 interface Props {
   title: string;
