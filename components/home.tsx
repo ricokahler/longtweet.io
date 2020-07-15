@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import TwitterLogo from './twitter-logo';
 import CircleNotch from './circle-notch';
-import { Redirect } from './router';
 import { useUser } from './user';
 import { login } from '../helpers/auth';
 
@@ -18,10 +17,6 @@ function Home() {
     }
   };
 
-  if (user.loggedIn) {
-    return <Redirect to="/compose" />;
-  }
-
   return (
     <>
       <h1 className="title">What is longtweet.io?</h1>
@@ -32,18 +27,22 @@ function Home() {
         lets you post your long thoughts.
       </p>
       <p>That's right. No ads. No trackers. As simple as that.</p>
-      <button
-        className="twitter-button"
-        onClick={handleLogin}
-        disabled={loggingIn}
-      >
-        {loggingIn ? (
-          <CircleNotch className="twitter-logo" />
-        ) : (
-          <TwitterLogo className="twitter-logo" />
-        )}
-        &nbsp;Sign in with Twitter
-      </button>
+      {user.loggedIn ? (
+        <a href="/compose">Create a new post →</a>
+      ) : (
+        <button
+          className="twitter-button"
+          onClick={handleLogin}
+          disabled={loggingIn}
+        >
+          {loggingIn ? (
+            <CircleNotch className="twitter-logo" />
+          ) : (
+            <TwitterLogo className="twitter-logo" />
+          )}
+          &nbsp;Sign in with Twitter
+        </button>
+      )}
     </>
   );
 }

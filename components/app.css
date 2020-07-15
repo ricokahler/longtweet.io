@@ -49,6 +49,10 @@ h1,
   display: flex;
 }
 
+.new-post-button {
+  margin-right: 0.5rem;
+}
+
 .spacer {
   margin-left: auto;
 }
@@ -60,9 +64,7 @@ h1,
 }
 
 .header-button {
-  grid-area: button;
   margin-right: 0.5rem;
-  margin-left: 0.5rem;
   color: black;
 }
 
@@ -73,6 +75,10 @@ h1,
 
 .header-button:active {
   background-color: #ddd;
+}
+
+.header-info {
+  margin-right: 0.5rem;
 }
 
 a {

@@ -15,11 +15,11 @@ function Footer() {
         </li>
       </ul>
       <p className="caption footer-paragraph">
-        longtweet is an{' '}
+        longtweet is a fast and reliable{' '}
         <a href="https://github.com/ricokahler/longtweet.io">open-source</a>{' '}
         blogging service created by{' '}
-        <a href="https://twitter.com/ricokahler">@ricokahler</a> for sustainable
-        and ad-free posts
+        <a href="https://twitter.com/ricokahler">@ricokahler</a> — offered
+        ad-free
       </p>
     </footer>
   );
