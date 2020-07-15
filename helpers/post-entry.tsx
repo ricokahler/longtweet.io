@@ -12,7 +12,7 @@ render(
   <Post
     title="Once upon a time"
     user="987520772"
-    postId="test-post"
+    postId="3hiz8afxa"
     createdDate={new Date().toISOString()}
     handle="ricokahler"
     text={`
