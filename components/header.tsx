@@ -14,10 +14,7 @@ function Header() {
         <span className="caption">— simple ad-free posts</span>
       </div>
       <div className="spacer" />
-      <a
-        className="compose-button caption new-post-button"
-        href={user.loggedIn ? '/compose' : '/'}
-      >
+      <a className="compose-button caption new-post-button" href="/compose">
         New post
       </a>
       <a
