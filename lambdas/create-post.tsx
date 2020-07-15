@@ -72,7 +72,7 @@ const handler: LambdaHandler = async (event) => {
     .promise();
 
   const createdDate = new Date().toISOString();
-  const description = `${sanitizeHtml(text).replace(/"/g, '').slice(0, 200)}…`;
+  const description = `${sanitizeHtml(text).replace(/"/g, '').slice(0, 200)}`;
   const title =
     sanitizeHtml(_title).replace(/"/g, '') || `longtweet by @${handle}`;
 
@@ -111,7 +111,7 @@ const handler: LambdaHandler = async (event) => {
       <meta property="og:url" content="https://longtweet.io/${id}">
       <meta property="og:description" content="${description}">
       <meta property="og:type" content="website">
-      <meta property="og:image" content="https://longtweet.io/android-chrome-512x512.png">
+      <meta property="og:image" content="https://longtweet.io/card-image.png">
       <meta name="copyright" content="Copyright © 2020 ${sanitizeHtml(
         handle,
       )}" />
