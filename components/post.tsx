@@ -55,13 +55,7 @@ function Post({ title, text, user, postId, createdDate, handle }: Props) {
           <p className="caption">
             <span>
               — by{' '}
-              <a
-                href={`https://twitter.com/intent/user?user_id=${encodeURIComponent(
-                  user,
-                )}`}
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href={`https://twitter.com/${encodeURIComponent(handle)}`}>
                 @{handle}
               </a>
               ,
