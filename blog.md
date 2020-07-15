@@ -56,7 +56,7 @@ It's excellent.
 
 Viewing a post is highly optimized and virtually free. When any user from around the world views a page, it's readily available at network edges via CloudFront.
 
-I maxed out what I could for free on [k6](https://k6.io) cloud and longtweet was able to handle sub 10 millisecond response times at 50 requests per second for 5 minutes — all while still on the free tier in AWS.
+I maxed out what I could for free on [k6 cloud](https://k6.io/cloud) and longtweet was able to handle sub 10 millisecond response times at 50 requests per second for 5 minutes — all while still on the free tier in AWS.
 
 ![Load test result](/load-test-result.png)
 
@@ -82,12 +82,14 @@ The rest of the pages on longtweet are client-side rendered with [preact](https:
 
 ## Drawbacks
 
-So at this point, you might be asking the big question: how do you change anything?
+So at this point, you might be asking the big question: how do you change the pages after they've already been pre-rendered?
 
-Doing migrations of a site like this would require all of the users posts to be re-rendered. In order to make that possible, save the un-rendered content to some DB explicitly for a migration.
+Well the simple answer is just render them all again.
+
+Doing migrations of a site like this would require all of the users posts to be re-rendered. In order to make that possible, save the raw content to some DB explicitly for a migration.
 
 ---
 
-Longtweet is also open source. [Checkout the source code here.](https://github.com/ricokahler/longtweet.io)
+Longtweet is also open-source. [Check out the source code here.](https://github.com/ricokahler/longtweet.io)
 
 Feel free to suggest ideas and contribute in any way. Transparency and simplicity are at the heart of this app. There are no plans on monetizing this.
