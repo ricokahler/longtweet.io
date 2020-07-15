@@ -14,7 +14,8 @@ import Redirect from './redirect';
 const Privacy = lazy(() => import('./privacy'));
 
 function App() {
-  const { pathname } = window.location;
+  const pathname =
+    typeof window !== 'undefined' ? window.location.pathname : '/';
 
   return (
     <>

@@ -30,7 +30,7 @@ async function main() {
   await new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       if (err || stats.hasErrors()) {
-        console.error(stats.toString());
+        console.error(stats?.toString());
         return reject(err);
       } else {
         resolve();
