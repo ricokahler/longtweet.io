@@ -40,7 +40,7 @@ function initPostControls() {
     deleteButton.addEventListener('click', async () => {
       if (
         !window.confirm(
-          'Are you sure you want to delete this post\nThis action cannot be undone.',
+          'Are you sure you want to delete this post?\nThis action cannot be undone.',
         )
       ) {
         return;
