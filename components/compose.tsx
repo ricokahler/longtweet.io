@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import usePull from 'use-pull';
 import PaperPlane from './paper-plane';
-import { Redirect } from './router';
 import { useUser } from './user';
 import { getToken } from '../helpers/auth';
 import CircleNotch from './circle-notch';
 import fetch from '../helpers/wrapped-fetch';
+import Redirect from './redirect';
 
 function Compose() {
   const user = useUser();
@@ -79,9 +79,7 @@ function Compose() {
           const { currentTarget } = e;
           setText(currentTarget.value);
           currentTarget.style.height = '1px';
-          currentTarget.style.height = `${
-            e.currentTarget.scrollHeight + 5
-          }px`;
+          currentTarget.style.height = `${e.currentTarget.scrollHeight + 5}px`;
         }}
       />
       {text.length > 300000 && (

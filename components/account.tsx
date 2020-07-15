@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getToken, logout } from '../helpers/auth';
 import wrappedFetch from '../helpers/wrapped-fetch';
 import { useUser } from './user';
-import { Redirect } from './router';
+import Redirect from './redirect';
 
 interface Post {
   id: string;

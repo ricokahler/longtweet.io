@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Redirect } from './router';
 import { handleCallback } from '../helpers/auth';
 import { useUser } from './user';
 import CircleNotch from './circle-notch';
+import Redirect from './redirect';
 
 function Callback() {
   const user = useUser();

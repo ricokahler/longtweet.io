@@ -1,5 +1,4 @@
 import React, { Suspense, lazy } from 'react';
-import { Router, useRouter, Redirect } from './router';
 import Callback from './callback';
 import Home from './home';
 import Compose from './compose';
@@ -11,10 +10,11 @@ import { UserProvider } from './user';
 import Header from './header';
 import Footer from './footer';
 import CircleNotch from './circle-notch';
+import Redirect from './redirect';
 const Privacy = lazy(() => import('./privacy'));
 
 function App() {
-  const { path } = useRouter();
+  const { pathname } = window.location;
 
   return (
     <>
@@ -28,21 +28,21 @@ function App() {
         }
       >
         <main className="main container">
-          {path === '/' ? (
+          {pathname === '/' ? (
             <Home key="home" />
-          ) : path === '/callback' ? (
+          ) : pathname === '/callback' ? (
             <Callback key="callback" />
-          ) : path === '/compose' ? (
+          ) : pathname === '/compose' ? (
             <Compose key="compose" />
-          ) : path === '/about' ? (
+          ) : pathname === '/about' ? (
             <About key="about" />
-          ) : path === '/privacy' ? (
+          ) : pathname === '/privacy' ? (
             <Privacy key="privacy" />
-          ) : path === '/account' ? (
+          ) : pathname === '/account' ? (
             <Account />
-          ) : path === '/terms' ? (
+          ) : pathname === '/terms' ? (
             <Terms />
-          ) : path === '/404' ? (
+          ) : pathname === '/404' ? (
             <NoRoute />
           ) : (
             <Redirect to="/404" />
@@ -56,8 +56,6 @@ function App() {
 
 export default () => (
   <UserProvider>
-    <Router>
-      <App />
-    </Router>
+    <App />
   </UserProvider>
 );
