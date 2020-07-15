@@ -9,16 +9,22 @@ function Header() {
 
   return (
     <header className="header container">
-      {router.path === '/compose' ? (
-        <div className="brand">longtweet.io&nbsp;</div>
-      ) : (
-        <a href="/" className="brand">
-          longtweet.io&nbsp;
+      <div>
+        {router.path === '/compose' ? (
+          <div className="brand">longtweet.io&nbsp;</div>
+        ) : (
+          <a href="/" className="brand">
+            longtweet.io&nbsp;
+          </a>
+        )}
+        <span className="caption">— simple ad-free posts</span>
+      </div>
+      <div className="spacer" />
+      {router.path !== '/compose' && (
+        <a className="compose-button caption" href="/">
+          New post
         </a>
       )}
-      <span className="brand-subtitle caption">
-        — simple ad-free, tracker-free posts
-      </span>
       <a
         style={{ display: user.loggedIn ? undefined : 'none' }}
         className="button header-button"

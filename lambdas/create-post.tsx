@@ -78,7 +78,6 @@ const handler: LambdaHandler = async (event) => {
 
   const css = await getObject('main.css');
   const postJs = await getObject('post.js');
-  const siteManifest = await getObject('site.webmanifest', true);
   const favicon32 = await getObject('favicon-32x32.png', true);
   const favicon16 = await getObject('favicon-16x16.png', true);
 

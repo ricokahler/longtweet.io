@@ -14,6 +14,13 @@ function Footer() {
           <a href="/privacy">Privacy</a>
         </li>
       </ul>
+      <p className="caption footer-paragraph">
+        longtweet is an{' '}
+        <a href="https://github.com/ricokahler/longtweet.io">open-source</a>{' '}
+        blogging service created by{' '}
+        <a href="https://twitter.com/ricokahler">@ricokahler</a> for sustainable
+        and ad-free posts
+      </p>
     </footer>
   );
 }

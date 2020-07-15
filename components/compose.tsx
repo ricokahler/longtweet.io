@@ -11,7 +11,6 @@ function Compose() {
   const user = useUser();
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
-  const [autoResize, setAutoResize] = useState(true);
   const [loading, setLoading] = useState(false);
   const postedRef = useRef(false);
 
@@ -55,7 +54,7 @@ function Compose() {
       />
       <p className="caption">
         <sup>*</sup>For <em>really</em> long posts, we advise you to copy/paste
-        from Google Docs or something.
+        from your notes or something.
         <br />
         {user.handle && (
           <>
@@ -79,22 +78,12 @@ function Compose() {
         onChange={(e) => {
           const { currentTarget } = e;
           setText(currentTarget.value);
-          if (autoResize) {
-            currentTarget.style.minHeight = '1px';
-            currentTarget.style.minHeight = e.currentTarget.scrollHeight + 'px';
-          }
+          currentTarget.style.height = '1px';
+          currentTarget.style.height = `${
+            e.currentTarget.scrollHeight + 5
+          }px`;
         }}
       />
-      <p>
-        <label className="caption auto-resize">
-          <div>Auto resize</div>&nbsp;
-          <input
-            type="checkbox"
-            checked={autoResize}
-            onChange={() => setAutoResize(!autoResize)}
-          />
-        </label>
-      </p>
       {text.length > 300000 && (
         <p className="caption">
           To prevent this platform from being abused, we limit posts to 300,000
@@ -108,7 +97,7 @@ function Compose() {
           setLoading(true);
           if (
             !window.confirm(
-              'Are you sure want to post this?\nThis post will be publicly available even if your tweets are protected.',
+              "Are you sure want to post this?\nYou'll get the chance to post it to Twitter after.",
             )
           ) {
             setLoading(false);
