@@ -24,6 +24,10 @@ async function validateToken(event: LambdaEvent): Promise<TokenPayload | null> {
   const payload = JSON.parse(Buffer.from(encodedPayload, 'base64').toString());
   const { user, exp } = payload as TokenPayload;
 
+  if (Date.now() >= exp * 1000) {
+    return null;
+  }
+
   const results = await dynamodb
     .query({
       ExpressionAttributeValues: {
@@ -77,9 +81,6 @@ async function validateToken(event: LambdaEvent): Promise<TokenPayload | null> {
   }
 
   const { oauthToken, oauthTokenSecret } = validToken;
-  if (Date.now() >= exp * 1000) {
-    return null;
-  }
 
   const oauth = new OAuth({
     consumer: {
