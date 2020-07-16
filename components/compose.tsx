@@ -129,6 +129,9 @@ function Compose() {
         <span>Post</span>
         {loading ? <CircleNotch /> : <PaperPlane />}
       </button>
+      <p className="caption">
+        Note: This will create a post in longtweet only.
+      </p>
     </>
   );
 }

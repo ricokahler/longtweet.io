@@ -11,6 +11,7 @@ import Header from './header';
 import Footer from './footer';
 import CircleNotch from './circle-notch';
 import Redirect from './redirect';
+import Deleted from './deleted';
 const Privacy = lazy(() => import('./privacy'));
 
 function App() {
@@ -41,6 +42,8 @@ function App() {
             <Privacy key="privacy" />
           ) : pathname === '/account' ? (
             <Account />
+          ) : pathname === '/deleted' ? (
+            <Deleted />
           ) : pathname === '/terms' ? (
             <Terms />
           ) : pathname === '/404' ? (
