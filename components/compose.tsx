@@ -126,11 +126,11 @@ function Compose() {
           }
         }}
       >
-        <span>Post</span>
+        <span>Save</span>
         {loading ? <CircleNotch /> : <PaperPlane />}
       </button>
       <p className="caption">
-        Note: This will create a post in longtweet only.
+        <strong>Note:</strong> This will <em>not</em> post to Twitter yet.
       </p>
     </>
   );

@@ -36,27 +36,26 @@ function Post({ title, text, user, postId, createdDate, handle }: Props) {
               </span>{' '}
               This is your post.
             </div>
+          </div>
+          <p className="author-controls__instructions">
+            Anyone with this link will be able to view your post here forever.
+          </p>
+          <p>
+            Press <strong>Tweet</strong> to share it on Twitter.
+          </p>
+          <div className="row">
+            <button id="delete" className="author-controls__delete-it button">
+              Delete
+            </button>
             <a
               className="author-controls__tweet-it button"
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                `https://longtweet.io/${postId}`,
+                `${title}\n\nWritten on longtweet: https://longtweet.io/${postId}`,
               )}`}
               target="_blank"
               rel="noreferrer"
             >
               Tweet
-            </a>
-            <button id="delete" className="author-controls__delete-it button">
-              Delete
-            </button>
-          </div>
-          <div className="author-controls__instructions">
-            Anyone with this link will be able to view your post here forever.
-            Share it with your audience.
-          </div>
-          <div className="author-controls__instructions">
-            <a href={`https://longtweet.io/${postId}`}>
-              https://longtweet.io/{postId}
             </a>
           </div>
         </div>

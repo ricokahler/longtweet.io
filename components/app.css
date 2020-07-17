@@ -312,8 +312,6 @@ p {
 }
 
 .author-controls__tweet-it {
-  margin-left: auto;
-  margin-right: 1rem;
   background-color: #1da1f2;
   border: none;
   color: white;
@@ -330,17 +328,19 @@ p {
 }
 
 .author-controls__delete-it {
-  background-color: #eb002b;
-  color: white;
+  border: 1px solid #eb002b;
+  color: #eb002b;
+  margin-right: 1rem;
+  margin-left: auto;
 }
 
 .author-controls__delete-it:hover,
 .author-controls__delete-it:focus {
-  background-color: #c20326;
+  background-color: #eb002b28;
 }
 
 .author-controls__delete-it:active {
-  background-color: #a30220;
+  background-color: #eb002b70;
 }
 
 .account-row {
