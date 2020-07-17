@@ -38,7 +38,7 @@ class ServerRenderPlugin implements webpack.Plugin {
         <meta property="og:url" content="https://longtweet.io">
         <meta property="og:description" content="simple ad-free, tracker-free posts">
         <meta property="og:type" content="website">
-        <meta property="og:image" content="https://longtweet.io/black.png">
+        <meta property="og:image" content="https://longtweet.io/card-image.png">
         <meta name="copyright" content="Copyright © 2020 Rico Kahler" />
         <meta name="author" content="Rico Kahler" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
