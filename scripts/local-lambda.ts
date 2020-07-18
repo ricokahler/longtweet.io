@@ -4,6 +4,7 @@ import * as deletePost from '../lambdas/delete-post';
 import * as sessionId from '../lambdas/session-id';
 import * as signIn from '../lambdas/sign-in';
 import * as token from '../lambdas/token';
+import * as bot from '../lambdas/bot';
 
 const app = express();
 const api = express.Router();
@@ -34,6 +35,7 @@ api.use('/create-post', createEndpointHandler(createPost.handler));
 api.use('/delete-post', createEndpointHandler(deletePost.handler));
 api.use('/session-id', createEndpointHandler(sessionId.handler));
 api.use('/token', createEndpointHandler(token.handler));
+api.use('/bot', createEndpointHandler(bot.handler));
 app.use(express.raw({ type: '*/*' }), api);
 
 app.listen(process.env.PORT, () => console.log('up'));
