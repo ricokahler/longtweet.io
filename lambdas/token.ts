@@ -6,6 +6,8 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
 import wrappedLambda from '../helpers/wrap-lambda';
 
+const dynamodb = new DynamoDB();
+
 const handler: LambdaHandler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 404 };
@@ -19,8 +21,6 @@ const handler: LambdaHandler = async (event) => {
   if (!sessionId || !oauthToken || !oauthVerifier) {
     return { statusCode: 400 };
   }
-
-  const dynamodb = new DynamoDB();
 
   const item = await dynamodb
     .getItem({

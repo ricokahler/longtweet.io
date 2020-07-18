@@ -9,6 +9,7 @@ import sanitizeHtml from 'sanitize-html';
 import zlib from 'zlib';
 
 const s3 = new S3();
+const dynamodb = new DynamoDB();
 
 async function getObject(key: string, noUnzip = false) {
   const obj = await s3
@@ -54,8 +55,6 @@ const handler: LambdaHandler = async (event) => {
   if (_title.length > 500) {
     return { statusCode: 400 };
   }
-
-  const dynamodb = new DynamoDB();
 
   await dynamodb
     .putItem({

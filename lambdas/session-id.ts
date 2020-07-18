@@ -2,13 +2,13 @@ import { DynamoDB } from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
 import wrapLambda from '../helpers/wrap-lambda';
 
+const dynamodb = new DynamoDB();
+
 const handler: LambdaHandler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 404 };
   }
   const sessionId = uuid();
-
-  const dynamodb = new DynamoDB();
 
   await dynamodb
     .putItem({

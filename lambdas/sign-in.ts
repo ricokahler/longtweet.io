@@ -4,6 +4,8 @@ import crypto from 'crypto';
 import { DynamoDB } from 'aws-sdk';
 import wrappedLambda from '../helpers/wrap-lambda';
 
+const dynamodb = new DynamoDB();
+
 const handler: LambdaHandler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 404 };
@@ -18,8 +20,6 @@ const handler: LambdaHandler = async (event) => {
   if (!sessionId) {
     return { statusCode: 400 };
   }
-
-  const dynamodb = new DynamoDB();
 
   const foundSession = await new Promise<boolean>((resolve, reject) => {
     dynamodb.getItem(

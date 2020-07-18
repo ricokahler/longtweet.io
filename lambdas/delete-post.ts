@@ -3,6 +3,10 @@ import validateToken from '../helpers/validate-token';
 import wrapLambda from '../helpers/wrap-lambda';
 import { v4 as uuid } from 'uuid';
 
+const s3 = new S3();
+const dynamodb = new DynamoDB();
+const cloudFront = new CloudFront();
+
 const handler: LambdaHandler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -16,10 +20,6 @@ const handler: LambdaHandler = async (event) => {
     return { statusCode: 401 };
   }
   const { user } = tokenPayload;
-
-  const s3 = new S3();
-  const dynamodb = new DynamoDB();
-  const cloudFront = new CloudFront();
 
   if (event.httpMethod !== 'POST') {
     return { statusCode: 404 };
