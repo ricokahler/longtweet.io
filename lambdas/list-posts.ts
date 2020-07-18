@@ -2,6 +2,8 @@ import { DynamoDB } from 'aws-sdk';
 import wrapLambda from '../helpers/wrap-lambda';
 import validateToken from '../helpers/validate-token';
 
+const dynamodb = new DynamoDB();
+
 const handler: LambdaHandler = async (event) => {
   const tokenPayload = await validateToken(event);
   if (!tokenPayload) {
@@ -12,8 +14,6 @@ const handler: LambdaHandler = async (event) => {
   if (event.httpMethod !== 'GET') {
     return { statusCode: 404 };
   }
-
-  const dynamodb = new DynamoDB();
 
   const result = await dynamodb
     .query({
