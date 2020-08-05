@@ -120,7 +120,9 @@ function Compose() {
             postedRef.current = true;
             window.location.assign(`/${id}`);
           } catch {
-            alert("We're sorry. Something went wrong.");
+            alert(
+              "We're sorry. Something went wrong.\nYour session may have expired. Please try logging out and try again.\n\nReport any bugs via DM to @longtweetio",
+            );
             setLoading(false);
             postedRef.current = false;
           }
