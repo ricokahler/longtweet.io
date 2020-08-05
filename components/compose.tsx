@@ -54,7 +54,7 @@ function Compose() {
       />
       <p className="caption">
         <sup>*</sup>For <em>really</em> long posts, we advise you to copy/paste
-        from your notes or something.
+        from your notes or something. Press enter twice for new paragraphs.
         <br />
         {user.handle && (
           <>
