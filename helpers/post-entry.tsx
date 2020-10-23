@@ -14,7 +14,7 @@ render(
     user="987520772"
     postId="3hiz8afxa"
     createdDate={new Date().toISOString()}
-    handle="ricokahler"
+    handle="rico_kahler"
     text={`
 # this is a thing
 

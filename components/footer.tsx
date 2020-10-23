@@ -18,7 +18,7 @@ function Footer() {
         longtweet is a fast and reliable{' '}
         <a href="https://github.com/ricokahler/longtweet.io">open-source</a>{' '}
         blogging service created by{' '}
-        <a href="https://twitter.com/ricokahler">@ricokahler</a> — offered
+        <a href="https://twitter.com/rico_kahler">@rico_kahler</a> — offered
         ad-free
       </p>
     </footer>
